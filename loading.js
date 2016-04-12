@@ -2,6 +2,7 @@ import React from 'react';
 import map from 'lodash/map';
 import some from 'lodash/some';
 import every from 'lodash/every';
+import displayName from './displayName';
 
 export default function loading({
   wrapper = <div />,
@@ -17,7 +18,7 @@ export default function loading({
   };
 
   return Component => class LoadingWrapper extends React.Component {
-    static displayName = `loading(${Component.displayName || Component.name})`;
+    static displayName = displayName('loading')(Component);
 
     render() {
       const _isReady = isReady(this.props);

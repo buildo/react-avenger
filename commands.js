@@ -5,6 +5,7 @@ import pick from 'lodash/pick';
 import omit from 'lodash/omit';
 import mapValues from 'lodash/mapValues';
 import t from 'tcomb';
+import displayName from './displayName';
 
 const warn = debug('react-avenger:commands');
 warn.log = ::console.warn; // eslint-disable-line no-console
@@ -36,7 +37,6 @@ export default function commands(allCommands) {
     }), {});
     const connectedProps = Object.keys(connectDecl).concat('transition');
     const decorator = Component => {
-      const displayName = `commands(${Component.displayName || Component.name})`;
       return connect(connectDecl, {
         pure,
         // some params for commands cannot be retrieved implicitly from state!
@@ -46,7 +46,7 @@ export default function commands(allCommands) {
         class CommandsWrapper extends React.Component {
           static contextTypes = CommandsContextTypes;
 
-          static displayName = displayName;
+          static displayName = displayName('commands')(Component);
 
           componentWillMount() {
             this._commands = mapValues(pick(this.context.commands, ids), cmd => params => {

@@ -7,6 +7,7 @@ import some from 'lodash/some';
 import omit from 'lodash/omit';
 import pick from 'lodash/pick';
 import every from 'lodash/every';
+import _displayName from './displayName';
 
 const log = debug('react-avenger:queries');
 const warn = debug('react-avenger:queries');
@@ -72,7 +73,7 @@ export default function queries(allQueries) {
     };
 
     const decorator = Component => {
-      const displayName = `queries(${Component.displayName || Component.name})`;
+      const displayName = _displayName('queries')(Component);
 
       return connect(connectDeclaration, {
         pure,
