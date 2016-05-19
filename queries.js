@@ -38,7 +38,7 @@ export default function queries(allQueries) {
     const QueriesTypes = {
       readyState: t.struct(queryNames.reduce((ac, k) => ({
         ...ac, [k]: t.struct({
-          waiting: t.Boolean, fetching: t.Boolean, loading: t.Boolean
+          waiting: t.Boolean, fetching: t.Boolean, loading: t.Boolean, error: t.maybe(t.Any)
         })
       }), {})),
       ...queryNames.reduce((ac, k, i) => ({
