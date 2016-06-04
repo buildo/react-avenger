@@ -98,11 +98,13 @@ export default function queries(allQueries) {
 
           _subscribe(props) {
             const shouldBail = shouldBailSubscription(props, connectDeclaration);
-            if (shouldBail && process.env.NODE_ENV === 'development') {
-              // TODO(gio): consider making this an always enabled log
-              // it's closer to an error/warning than a debug message
-              // (it should never happen)
-              warn(`Bailing queries subscription (missing ${shouldBail.join(', ')} input params) for ${displayName}`);
+            if (shouldBail) {
+              if (process.env.NODE_ENV === 'development') {
+                // TODO(gio): consider making this an always enabled log
+                // it's closer to an error/warning than a debug message
+                // (it should never happen)
+                warn(`Bailing queries subscription (missing ${shouldBail.join(', ')} input params) for ${displayName}`);
+              }
               return;
             }
 
