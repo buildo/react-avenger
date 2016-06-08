@@ -1,7 +1,8 @@
 import React from 'react';
+import t from 'tcomb';
 import map from 'lodash/map';
-import some from 'lodash/some';
 import every from 'lodash/every';
+import some from 'lodash/some';
 import displayName from './displayName';
 
 const _isLoading = ({ readyState }) => {
@@ -13,7 +14,6 @@ const _isReady = ({ readyState, ...props }) => {
     props[k] !== void 0 && typeof rs.error === 'undefined'
   )));
 };
-
 
 export default function loading({
   isLoading = _isLoading,
@@ -34,7 +34,7 @@ export default function loading({
       return React.cloneElement(wrapper, wrapperProps(readyState), [
         ready && <Component {...this.props} key='content' />,
         loading && React.cloneElement(loader, {
-          key: 'loader', ...loaderProps(readyState)
+          key: 'loader', delay: ready ? 200 : 0, ...loaderProps(readyState)
         })
       ]);
     }
