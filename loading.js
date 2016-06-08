@@ -2,6 +2,7 @@ import React from 'react';
 import map from 'lodash/map';
 import some from 'lodash/some';
 import every from 'lodash/every';
+import omit from 'lodash/omit';
 import displayName from './displayName';
 
 const _isLoading = ({ readyState }) => {
@@ -9,9 +10,8 @@ const _isLoading = ({ readyState }) => {
 };
 
 const _isReady = ({ readyState, ...props }) => {
-  return every(map(readyState, (rs, k) => (
-    props[k] !== void 0 && typeof rs.error === 'undefined'
-  )));
+  const rsWithoutLoading = omit(readyState, ['loading']);
+  return every(map(rsWithoutLoading, (rs, k) => props[k] !== void 0));
 };
 
 
