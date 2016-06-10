@@ -6,7 +6,9 @@ import displayName from './displayName';
 
 export default function loading({
   wrapper = <div />,
-  loader = <div>loading...</div>
+  loader = <div>loading...</div>,
+  loaderProps = () => ({}),
+  wrapperProps = () => ({})
 }) {
 
   const isLoading = ({ readyState }) => {
@@ -14,17 +16,23 @@ export default function loading({
   };
 
   const isReady = ({ readyState, ...props }) => {
-    return every(map(readyState, (rs, k) => props[k] !== void 0 && typeof rs.error === 'undefined'));
+    return every(map(readyState, (rs, k) => (
+      props[k] !== void 0 && typeof rs.error === 'undefined'
+    )));
   };
 
   return Component => class LoadingWrapper extends React.Component {
     static displayName = displayName('loading')(Component);
 
     render() {
-      const _isReady = isReady(this.props);
-      return React.cloneElement(wrapper, {}, [
-        _isReady && <Component {...this.props} key='content' />,
-        isLoading(this.props) && React.cloneElement(loader, { key: 'loader', delay: _isReady ? 200 : 0 })
+      const ready = isReady(this.props);
+      const loading = isLoading(this.props);
+      const readyState = { ready, loading };
+      return React.cloneElement(wrapper, wrapperProps(readyState), [
+        ready && <Component {...this.props} key='content' />,
+        loading && React.cloneElement(loader, {
+          key: 'loader', ...loaderProps(readyState)
+        })
       ]);
     }
   };
