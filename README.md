@@ -116,5 +116,11 @@ class MyComponent extends React.Component {
 # real world usage
 
 The examples below should work by themselves,
-but in a real world project you might want to define and re-export a single `queries` and `commands` decorator,
+but in a real world project you might want to define and re-export a single `queries`, `commands` and `loading` decorator,
 to be used in component files.
+
+For `loading`, you might need different styles & layout, so we typically do something like:
+
+```js
+import loading from 'loading/fillFlexLoading'; // or `fillAbsoluteLoading`, or `tinyLoading`, etc.
+```
