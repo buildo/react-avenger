@@ -1,3 +1,7 @@
+# What's this about
+
+This repo exports three decorators (aka component enhancer functions, aka HOCs) providing component apis for [avenger](https://github.com/buildo/avenger): `queries`, `commands` and `loading`.
+
 # queries
 
 Import the factory as
