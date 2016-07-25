@@ -5,6 +5,7 @@ import every from 'lodash/every';
 import displayName from './displayName';
 
 export default function loading({
+  renderAnyway = false,
   wrapper = <div />,
   loader = <div>loading...</div>,
   loaderProps = () => ({}),
@@ -25,7 +26,7 @@ export default function loading({
     static displayName = displayName('loading')(Component);
 
     render() {
-      const ready = isReady(this.props);
+      const ready = renderAnyway || isReady(this.props);
       const loading = isLoading(this.props);
       const readyState = { ready, loading };
       return React.cloneElement(wrapper, wrapperProps(readyState), [
