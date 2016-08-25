@@ -1,7 +1,6 @@
 import React from 'react';
-import t from 'tcomb';
 import map from 'lodash/map';
-import every from 'lodash/every';
+import t from 'tcomb';
 import some from 'lodash/some';
 import displayName from './displayName';
 
@@ -10,9 +9,12 @@ const _isLoading = ({ readyState }) => {
 };
 
 const _isReady = ({ readyState, ...props }) => {
-  return every(map(readyState, (rs, k) => (
-    props[k] !== void 0 && typeof rs.error === 'undefined'
-  )));
+  for (const k in readyState) {
+    if (k !== 'loading' && t.Nil.is(props[k])) {
+      return false;
+    }
+  }
+  return true;
 };
 
 export default function loading({
