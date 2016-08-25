@@ -36,7 +36,7 @@ export default function loading({
       return React.cloneElement(wrapper, wrapperProps(readyState), [
         ready && <Component {...this.props} key='content' />,
         loading && React.cloneElement(loader, {
-          key: 'loader', delay: ready ? 200 : 0, ...loaderProps(readyState)
+          key: 'loader', ...loaderProps(readyState)
         })
       ]);
     }
