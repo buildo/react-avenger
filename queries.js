@@ -75,6 +75,15 @@ export default function queries(allQueries) {
     const decorator = Component => {
       const displayName = _displayName('queries')(Component);
 
+      const bailingWarning = shouldBail => {
+        if (process.env.NODE_ENV === 'development') {
+          // TODO(gio): consider making this an always enabled log
+          // it's closer to an error/warning than a debug message
+          // (it should never happen)
+          warn(`Bailing queries subscription (missing ${shouldBail.join(', ')} input params) for ${displayName}`);
+        }
+      };
+
       return connect(connectDeclaration, {
         pure,
         // some params for queries cannot be retrieved implicitly from state!
@@ -86,25 +95,28 @@ export default function queries(allQueries) {
 
           static displayName = displayName;
 
-          constructor(props) {
-            super(props);
+          constructor(props, context) {
+            super(props, context);
             // TODO(gio): support props renaming
-            this.state = {
+            const shouldBail = shouldBailSubscription(props, connectDeclaration);
+            if (shouldBail) {
+              bailingWarning(shouldBail);
+            }
+            this.state = shouldBail ? {
               readyState: queryNames.reduce((ac, k) => ({ ...ac, [k]: {
                 waiting: true, loading: true, fetching: false
-              }
-            }), {}) };
+              } }), {})
+            } : {
+              ...context.avenger.queriesSync(queryNames.reduce((ac, queryName) => ({
+                ...ac, [queryName]: pick(props, Object.keys(allQueries[queryName].upsetActualParams))
+              }), {}))
+            };
           }
 
           _subscribe(props) {
             const shouldBail = shouldBailSubscription(props, connectDeclaration);
             if (shouldBail) {
-              if (process.env.NODE_ENV === 'development') {
-                // TODO(gio): consider making this an always enabled log
-                // it's closer to an error/warning than a debug message
-                // (it should never happen)
-                warn(`Bailing queries subscription (missing ${shouldBail.join(', ')} input params) for ${displayName}`);
-              }
+              bailingWarning(shouldBail);
               return;
             }
 
