@@ -1,19 +1,12 @@
 import React from 'react';
 import map from 'lodash/map';
 import some from 'lodash/some';
-import every from 'lodash/every';
 import displayName from './displayName';
+import _isReady from './isReady';
 
 const _isLoading = ({ readyState }) => {
   return some(map(readyState, rs => rs.loading));
 };
-
-const _isReady = ({ readyState, ...props }) => {
-  return every(map(readyState, (rs, k) => (
-    props[k] !== void 0 && typeof rs.error === 'undefined'
-  )));
-};
-
 
 export default function loading({
   isLoading = _isLoading,
