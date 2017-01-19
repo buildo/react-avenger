@@ -5,8 +5,9 @@ export default function loading({
   wrapper = <div />,
   loader = <div>loading...</div>,
   showLoaderOnFetching: showLoader = true,
+  showUIonFetching: showUI = false,
   showLoaderonRefetching: reShowLoader = true,
-  showUIonRefetching: showUI = true
+  showUIonRefetching: reShowUI = true
 }) {
 
   return (Component) => class LoadingUIWrapper extends React.Component {
@@ -17,11 +18,8 @@ export default function loading({
       const { __status: status, ...props } = this.props;
       return {
         isReady: <Component {...props} />,
-        isFetching: showLoader ? loader : null,
-        isRefetching: React.cloneElement(wrapper, null, [
-          reShowLoader && loader,
-          showUI && <Component {...props} />
-        ])
+        isFetching: React.cloneElement(wrapper, null, [showLoader && loader, showUI && <Component {...props} />]),
+        isRefetching: React.cloneElement(wrapper, null, [reShowLoader && loader, reShowUI && <Component {...props} />])
       }[status];
 
     }
