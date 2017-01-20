@@ -18,8 +18,8 @@ export default function loading({
       const { __status: status, ...props } = this.props;
       switch (status) {
         case 'isReady': return React.cloneElement(wrapper, null, [<Component {...props} />]);
-        case 'isFetching': return React.cloneElement(wrapper, null, [showLoader && loader, showUI && <Component {...props} />]);
-        case 'isRefetching': return React.cloneElement(wrapper, null, [reShowLoader && loader, reShowUI && <Component {...props} />]);
+        case 'isFetching': return React.cloneElement(wrapper, null, [showLoader && loader, showUI && <Component {...props} key='content' />]);
+        case 'isRefetching': return React.cloneElement(wrapper, null, [reShowLoader && loader, reShowUI && <Component {...props} key='content' />]);
       }
     }
   };
