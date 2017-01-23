@@ -1,6 +1,11 @@
 #  Change Log
 
+## [Unreleased](https://github.com/buildo/react-avenger/tree/HEAD)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v2...HEAD)
 
+#### Fixes (bugs & defects):
+
+- explicitly declare and import from buildo-state [#11](https://github.com/buildo/react-avenger/issues/11)
 
 ## [v2](https://github.com/buildo/react-avenger/tree/v2) (2016-06-08)
 [Full Changelog](https://github.com/buildo/react-avenger/compare/v0.3.0...v2)
