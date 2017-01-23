@@ -1,0 +1,14 @@
+build:
+  test-and-lint:
+    image: node:6
+    environment:
+      - NPM_CONFIG_CACHE=/drone/.npm
+      - NPM_CONFIG_LOGLEVEL=warn
+    commands:
+      - npm i
+      - npm run lint
+      - npm run build
+
+cache:
+  mount:
+    - /drone/.npm
