@@ -36,5 +36,8 @@
   "peerDependencies": {
     "avenger": "^0.2.9",
     "react": "0.14.x || 15.x"
+  },
+  "dependencies": {
+    "buildo-state": "^0.3.0"
   }
 }
