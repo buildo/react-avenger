@@ -2,7 +2,6 @@
   "name": "react-avenger",
   "version": "0.2.0",
   "description": "react bindings for avenger",
-  "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint src",
