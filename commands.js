@@ -26,11 +26,11 @@ export default function commands(allCommands) {
   } = {}) => {
     const ids = t.Arr.is(_ids) ? _ids : [_ids];
     if (process.env.NODE_ENV !== 'production') {
-      for (const id of ids) {
+      ids.forEach(id => {
         if (!allCommands[id]) {
           warn(`command '${id}' not found! @commands declaration is: ${ids}`);
         }
-      }
+      });
     }
     const connectDecl = ids.reduce((ac, k) => ({
       ...ac, ...allCommands[k].invalidateParams, ...(allCommands[k].params || {})

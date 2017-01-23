@@ -29,11 +29,11 @@ export default function queries(allQueries) {
     // TODO(gio): support props renaming
     const queryNames = declaration;
     if (process.env.NODE_ENV !== 'production') {
-      for (const name of queryNames) {
+      queryNames.forEach(name => {
         if (!allQueries[name]) {
           warn(`query '${name}' not found! @queries declaration is: ${declaration}`);
         }
-      }
+      });
     }
     const QueriesTypes = {
       readyState: t.struct(queryNames.reduce((ac, k) => ({
