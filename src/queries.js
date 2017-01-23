@@ -1,8 +1,8 @@
 import React from 'react';
 import debug from 'debug';
 import t from 'tcomb';
-import shallowEqual from 'state/shallowEqual'; // TODO(split)
-import connect from 'state/connect'; // TODO(split)
+import shallowEqual from 'buildo-state/lib/shallowEqual'; // TODO(split)
+import connect from 'buildo-state/lib/connect'; // TODO(split)
 import some from 'lodash/some';
 import omit from 'lodash/omit';
 import pick from 'lodash/pick';

@@ -1,6 +1,6 @@
 import React from 'react';
 import debug from 'debug';
-import connect from 'state/connect'; // TODO(split)
+import connect from 'buildo-state/lib/connect'; // TODO(split)
 import pick from 'lodash/pick';
 import omit from 'lodash/omit';
 import mapValues from 'lodash/mapValues';
