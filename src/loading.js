@@ -16,9 +16,10 @@ export default function loading({
   loader = <div>loading...</div>,
   loaderProps = constant({}),
   wrapperProps = constant({})
-}) { // todo `add = {}`` i.e. default empty config, so that it can be used like this: `@loading()` instead than `@loading({})`
+} = {}) {
 
   return Component => class LoadingWrapper extends React.Component {
+
     static displayName = displayName('loading')(Component);
 
     render() {
