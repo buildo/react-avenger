@@ -26,7 +26,7 @@ export default function loading({
       const loading = isLoading(this.props);
       const readyState = { ready, loading };
       return React.cloneElement(wrapper, wrapperProps(readyState), [
-        ready && <Component {...this.props} key='content' />,
+        ready && <Component {...omit(this.props, 'readyState')} key='content' />,
         loading && React.cloneElement(loader, {
           key: 'loader', ...loaderProps(readyState)
         })
