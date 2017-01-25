@@ -1,3 +1,4 @@
+/* eslint-disable react/no-multi-comp */
 import React from 'react';
 import every from 'lodash/every';
 import some from 'lodash/some';
@@ -9,11 +10,14 @@ export const defaultIsLoading = ({ readyState }) => some(readyState, 'loading');
 
 export const defaultIsReady = ({ readyState }) => every(readyState, 'ready');
 
+export class NoWrapper extends React.Component { render = () => (this.props.children || [])[0] || null; }
+export class NoLoader extends React.Component { render = () => null; }
+
 export default function loading({
   isLoading = defaultIsLoading,
   isReady = defaultIsReady,
-  wrapper = <div />,
-  loader = <div>loading...</div>,
+  wrapper = <NoWrapper />,
+  loader = <NoLoader />,
   loaderProps = constant({}),
   wrapperProps = constant({})
 } = {}) {
@@ -35,3 +39,5 @@ export default function loading({
     }
   };
 }
+
+export const noLoaderLoading = loading();
