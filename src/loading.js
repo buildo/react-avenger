@@ -1,21 +1,22 @@
 import React from 'react';
-import map from 'lodash/map';
+import every from 'lodash/every';
 import some from 'lodash/some';
+import omit from 'lodash/omit';
+import constant from 'lodash/constant';
 import displayName from './displayName';
-import _isReady from './isReady';
 
-const _isLoading = ({ readyState }) => {
-  return some(map(readyState, rs => rs.loading));
-};
+const defaultIsLoading = ({ readyState }) => some(readyState, 'loading');
+
+const defaultIsReady = ({ readyState }) => every(readyState, 'ready');
 
 export default function loading({
-  isLoading = _isLoading,
-  isReady = _isReady,
+  isLoading = defaultIsLoading,
+  isReady = defaultIsReady,
   wrapper = <div />,
   loader = <div>loading...</div>,
-  loaderProps = () => ({}),
-  wrapperProps = () => ({})
-}) {
+  loaderProps = constant({}),
+  wrapperProps = constant({})
+}) { // todo `add = {}`` i.e. default empty config, so that it can be used like this: `@loading()` instead than `@loading({})`
 
   return Component => class LoadingWrapper extends React.Component {
     static displayName = displayName('loading')(Component);
