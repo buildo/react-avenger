@@ -5,9 +5,9 @@ import omit from 'lodash/omit';
 import constant from 'lodash/constant';
 import displayName from './displayName';
 
-const defaultIsLoading = ({ readyState }) => some(readyState, 'loading');
+export const defaultIsLoading = ({ readyState }) => some(readyState, 'loading');
 
-const defaultIsReady = ({ readyState }) => every(readyState, 'ready');
+export const defaultIsReady = ({ readyState }) => every(readyState, 'ready');
 
 export default function loading({
   isLoading = defaultIsLoading,
