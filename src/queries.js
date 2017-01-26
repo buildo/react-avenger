@@ -139,7 +139,8 @@ export default function queries(allQueries) {
                   ..._queries,
                   readyState: mapValues(_queries.readyState, (rs, queryName) => ({
                     ...rs,
-                    ready: _queries[queryName] !== void 0 && rs.error === void 0// ready if values is not undefined, and if no readyState.error
+                    // ready if values is not undefined, and if no readyState.error
+                    ready: _queries[queryName] !== void 0 && rs.error === void 0
                   }))
                 };
                 this.setState(queriesState);
