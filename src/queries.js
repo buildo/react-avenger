@@ -133,16 +133,16 @@ export default function queries(allQueries) {
               }
 
               // TODO(gio): support props renaming
-              this._subscription = this.context.avenger.queries(queries).subscribe(q => {
+              this._subscription = this.context.avenger.queries(queries).subscribe(_queries => {
                 // add `ready` boolean param to readyState
-                const queriesProps = {
-                  ...q,
-                  readyState: mapValues(q.readyState, (rs, queryName) => ({
+                const queriesState = {
+                  ..._queries,
+                  readyState: mapValues(_queries.readyState, (rs, queryName) => ({
                     ...rs,
-                    ready: q[queryName] !== void 0 && rs.error === void 0// ready if values is not undefined, and if no readyState.error
+                    ready: _queries[queryName] !== void 0 && rs.error === void 0// ready if values is not undefined, and if no readyState.error
                   }))
                 };
-                this.setState(queriesProps);
+                this.setState(queriesState);
               });
             }
           }
