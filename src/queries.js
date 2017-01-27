@@ -5,6 +5,7 @@ import shallowEqual from 'buildo-state/lib/shallowEqual'; // TODO(split)
 import connect from 'buildo-state/lib/connect'; // TODO(split)
 import some from 'lodash/some';
 import omit from 'lodash/omit';
+import mapValues from 'lodash/mapValues';
 import pick from 'lodash/pick';
 import every from 'lodash/every';
 import _displayName from './displayName';
@@ -38,7 +39,7 @@ export default function queries(allQueries) {
     const QueriesTypes = {
       readyState: t.struct(queryNames.reduce((ac, k) => ({
         ...ac, [k]: t.struct({
-          waiting: t.Boolean, fetching: t.Boolean, loading: t.Boolean, error: t.maybe(t.Any)
+          waiting: t.Boolean, fetching: t.Boolean, loading: t.Boolean, error: t.maybe(t.Any), ready: t.maybe(t.Boolean)
         })
       }), {})),
       ...queryNames.reduce((ac, k, i) => ({
@@ -104,7 +105,7 @@ export default function queries(allQueries) {
             }
             this.state = shouldBail ? {
               readyState: queryNames.reduce((ac, k) => ({ ...ac, [k]: {
-                waiting: true, loading: true, fetching: false
+                waiting: true, loading: true, fetching: false, ready: false
               } }), {})
             } : {
               ...context.avenger.queriesSync(queryNames.reduce((ac, queryName) => ({
@@ -132,7 +133,18 @@ export default function queries(allQueries) {
               }
 
               // TODO(gio): support props renaming
-              this._subscription = this.context.avenger.queries(queries).subscribe(::this.setState);
+              this._subscription = this.context.avenger.queries(queries).subscribe(_queries => {
+                // add `ready` boolean param to readyState
+                const queriesState = {
+                  ..._queries,
+                  readyState: mapValues(_queries.readyState, (rs, queryName) => ({
+                    ...rs,
+                    // ready if values is not undefined, and if no readyState.error
+                    ready: _queries[queryName] !== void 0 && rs.error === void 0
+                  }))
+                };
+                this.setState(queriesState);
+              });
             }
           }
 

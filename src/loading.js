@@ -1,23 +1,29 @@
+/* eslint-disable react/no-multi-comp */
 import React from 'react';
-import map from 'lodash/map';
+import every from 'lodash/every';
 import some from 'lodash/some';
+import omit from 'lodash/omit';
+import constant from 'lodash/constant';
 import displayName from './displayName';
-import _isReady from './isReady';
 
-const _isLoading = ({ readyState }) => {
-  return some(map(readyState, rs => rs.loading));
-};
+export const defaultIsLoading = ({ readyState }) => some(readyState, 'loading');
+
+export const defaultIsReady = ({ readyState }) => every(readyState, 'ready');
+
+export class NoWrapper extends React.Component { render = () => (this.props.children || [])[0] || null; }
+export class NoLoader extends React.Component { render = () => null; }
 
 export default function loading({
-  isLoading = _isLoading,
-  isReady = _isReady,
-  wrapper = <div />,
-  loader = <div>loading...</div>,
-  loaderProps = () => ({}),
-  wrapperProps = () => ({})
-}) {
+  isLoading = defaultIsLoading,
+  isReady = defaultIsReady,
+  wrapper = <NoWrapper />,
+  loader = <NoLoader />,
+  loaderProps = constant({}),
+  wrapperProps = constant({})
+} = {}) {
 
   return Component => class LoadingWrapper extends React.Component {
+
     static displayName = displayName('loading')(Component);
 
     render() {
@@ -25,7 +31,7 @@ export default function loading({
       const loading = isLoading(this.props);
       const readyState = { ready, loading };
       return React.cloneElement(wrapper, wrapperProps(readyState), [
-        ready && <Component {...this.props} key='content' />,
+        ready && <Component {...omit(this.props, 'readyState')} key='content' />,
         loading && React.cloneElement(loader, {
           key: 'loader', ...loaderProps(readyState)
         })
@@ -33,3 +39,5 @@ export default function loading({
     }
   };
 }
+
+export const noLoaderLoading = loading();
