@@ -31,7 +31,7 @@
     "babel-preset-stage-0": "^6.22.0",
     "eslint": "^3.14.0",
     "eslint-config-buildo": "^0.2.0",
-    "smooth-release": "^6.0.0"
+    "smooth-release": "^7.0.0"
   },
   "peerDependencies": {
     "avenger": "^0.2.9",
