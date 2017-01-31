@@ -34,7 +34,7 @@
     "smooth-release": "^7.0.0"
   },
   "peerDependencies": {
-    "avenger": "^0.2.9",
+    "avenger": "^1.0.0",
     "react": "0.14.x || 15.x"
   },
   "dependencies": {

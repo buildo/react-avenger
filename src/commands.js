@@ -33,7 +33,7 @@ export default function commands(allCommands) {
       });
     }
     const connectDecl = ids.reduce((ac, k) => ({
-      ...ac, ...allCommands[k].invalidateParams, ...(allCommands[k].params || {})
+      ...ac, ...(allCommands[k].params || {})
     }), {});
     const connectedProps = Object.keys(connectDecl).concat('transition');
     const decorator = Component => {
