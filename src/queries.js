@@ -23,6 +23,21 @@ const queryUpsetParams = q => flattenDeep(q.A).reduce((ac, k) => ({
   ...ac, [k]: t.Any // TODO: when avenger/Query api is :+1:, use the param type here
 }), {});
 
+const mapQueriesToState = ({ data }) => ({
+  readyState: {
+    ...Object.keys(data).reduce((ac, k) => ({
+      ...ac, [k]: {
+        loading: data[k].loading,
+        // add `ready` boolean param to readyState
+        ready: data[k].data !== void 0
+      }
+    }), {})
+  },
+  ...Object.keys(data).reduce((ac, k) => ({
+    ...ac, [k]: data[k].data
+  }), {})
+});
+
 export default function queries(allQueries) {
   return function(declaration, {
     // `pure` param for the `@connect` decoration
@@ -104,11 +119,21 @@ export default function queries(allQueries) {
           constructor(props, context) {
             super(props, context);
 
-            // no "query sync" api yet, just prepare the `readyState`
-            this.state = {
+            const shouldBail = shouldBailSubscription(props, connectDeclaration);
+            if (shouldBail) {
+              bailingWarning(shouldBail);
+            }
+
+            this.state = shouldBail ? {
               readyState: queryNames.reduce((ac, k) => ({ ...ac, [k]: {
                 loading: true, ready: false
               } }), {})
+            } : {
+              ...mapQueriesToState(
+                context.querySync(
+                  context.graph, queryNames, pick(props, Object.keys(connectDeclaration))
+                )
+              )
             };
           }
 
@@ -129,21 +154,8 @@ export default function queries(allQueries) {
               }
 
               this._subscription = this.context.query(this.context.graph, queryNames, params)
-                .map(({ data }) => ({
-                  readyState: {
-                    ...Object.keys(data).reduce((ac, k) => ({
-                      ...ac, [k]: {
-                        loading: data[k].loading,
-                        // add `ready` boolean param to readyState
-                        ready: data[k].data !== void 0
-                      }
-                    }), {})
-                  },
-                  ...Object.keys(data).reduce((ac, k) => ({
-                    ...ac, [k]: data[k].data
-                  }), {})
-                }))
                 .debounceTime(5)
+                .map(mapQueriesToState)
                 .subscribe(::this.setState);
             }
           }
