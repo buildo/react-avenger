@@ -16,12 +16,28 @@ warn.log = ::console.warn; // eslint-disable-line no-console
 
 export const QueriesContextTypes = {
   graph: React.PropTypes.object.isRequired,
-  query: React.PropTypes.func.isRequired
+  query: React.PropTypes.func.isRequired,
+  querySync: React.PropTypes.func // not required if option `querySync=false`
 };
 
 const queryUpsetParams = q => flattenDeep(q.A).reduce((ac, k) => ({
   ...ac, [k]: t.Any // TODO: when avenger/Query api is :+1:, use the param type here
 }), {});
+
+const mapQueriesToState = ({ data }) => ({
+  readyState: {
+    ...Object.keys(data).reduce((ac, k) => ({
+      ...ac, [k]: {
+        loading: data[k].loading,
+        // add `ready` boolean param to readyState
+        ready: data[k].data !== void 0
+      }
+    }), {})
+  },
+  ...Object.keys(data).reduce((ac, k) => ({
+    ...ac, [k]: data[k].data
+  }), {})
+});
 
 export default function queries(allQueries) {
   return function(declaration, {
@@ -30,7 +46,18 @@ export default function queries(allQueries) {
     //
     // Boolean
     //
-    pure = true
+    pure = true,
+
+    // whether to use `querySync` and flush the data available before
+    // first render() or not
+    // Defaults to `false` since it is typically unwanted client-side
+    // when rendering something, even an empty/loading view
+    // is better than waiting for a "long render"
+    // This must be `true` server-side, when there's a single render() pass
+    //
+    // Boolean
+    //
+    querySync = false
   } = {}) {
     // TODO(gio): support props renaming
     const queryNames = declaration;
@@ -104,12 +131,28 @@ export default function queries(allQueries) {
           constructor(props, context) {
             super(props, context);
 
-            // no "query sync" api yet, just prepare the `readyState`
-            this.state = {
+            const emptyData = {
               readyState: queryNames.reduce((ac, k) => ({ ...ac, [k]: {
                 loading: true, ready: false
               } }), {})
             };
+
+            if (querySync) {
+              const shouldBail = shouldBailSubscription(props, connectDeclaration);
+              if (shouldBail) {
+                bailingWarning(shouldBail);
+              }
+
+              this.state = shouldBail ? emptyData : {
+                ...mapQueriesToState(
+                  context.querySync(
+                    context.graph, queryNames, pick(props, Object.keys(connectDeclaration))
+                  )
+                )
+              };
+            } else {
+              this.state = emptyData;
+            }
           }
 
           _subscribe(props) {
@@ -129,21 +172,8 @@ export default function queries(allQueries) {
               }
 
               this._subscription = this.context.query(this.context.graph, queryNames, params)
-                .map(({ data }) => ({
-                  readyState: {
-                    ...Object.keys(data).reduce((ac, k) => ({
-                      ...ac, [k]: {
-                        loading: data[k].loading,
-                        // add `ready` boolean param to readyState
-                        ready: data[k].data !== void 0
-                      }
-                    }), {})
-                  },
-                  ...Object.keys(data).reduce((ac, k) => ({
-                    ...ac, [k]: data[k].data
-                  }), {})
-                }))
                 .debounceTime(5)
+                .map(mapQueriesToState)
                 .subscribe(::this.setState);
             }
           }
