@@ -1,14 +1,34 @@
 #  Change Log
 
-## [Unreleased](https://github.com/buildo/react-avenger/tree/HEAD)
-[Full Changelog](https://github.com/buildo/react-avenger/compare/v2...HEAD)
+
+
+## [v2](https://github.com/buildo/react-avenger/tree/v2) (2016-06-08)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v1.0.0...v2)
+
+## [v1.0.0](https://github.com/buildo/react-avenger/tree/v1.0.0) (2017-01-31)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v0.5.0...v1.0.0)
+
+#### Breaking:
+
+- change `queries` and `commands` to work with latest avenger version [#18](https://github.com/buildo/react-avenger/issues/18)
+
+#### New features:
+
+- Update smooth release [#14](https://github.com/buildo/react-avenger/issues/14)
+
+## [v0.5.0](https://github.com/buildo/react-avenger/tree/v0.5.0) (2017-01-27)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v0.4.0...v0.5.0)
+
+#### Breaking:
+
+- loading decorator improvements [#7](https://github.com/buildo/react-avenger/issues/7)
+
+## [v0.4.0](https://github.com/buildo/react-avenger/tree/v0.4.0) (2017-01-23)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v0.3.0...v0.4.0)
 
 #### Fixes (bugs & defects):
 
 - explicitly declare and import from buildo-state [#11](https://github.com/buildo/react-avenger/issues/11)
-
-## [v2](https://github.com/buildo/react-avenger/tree/v2) (2016-06-08)
-[Full Changelog](https://github.com/buildo/react-avenger/compare/v0.3.0...v2)
 
 ## [v0.3.0](https://github.com/buildo/react-avenger/tree/v0.3.0) (2017-01-23)
 [Full Changelog](https://github.com/buildo/react-avenger/compare/v0.2.0...v0.3.0)
