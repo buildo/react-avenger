@@ -8,6 +8,7 @@ import pick from 'lodash/pick';
 import every from 'lodash/every';
 import flattenDeep from 'lodash/flattenDeep';
 import _displayName from './displayName';
+import 'rxjs/add/operator/debounceTime';
 
 const log = debug('react-avenger:queries');
 const warn = debug('react-avenger:queries');
@@ -142,6 +143,7 @@ export default function queries(allQueries) {
                     ...ac, [k]: data[k].data
                   }), {})
                 }))
+                .debounceTime(5)
                 .subscribe(::this.setState);
             }
           }
