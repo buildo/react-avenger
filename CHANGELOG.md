@@ -3,7 +3,15 @@
 
 
 ## [v2](https://github.com/buildo/react-avenger/tree/v2) (2016-06-08)
-[Full Changelog](https://github.com/buildo/react-avenger/compare/v1.0.0...v2)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v1.1.0...v2)
+
+## [v1.1.0](https://github.com/buildo/react-avenger/tree/v1.1.0) (2017-01-31)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v1.0.0...v1.1.0)
+
+#### New features:
+
+- queries: avoid a few "useless" rerenders debouncing avenger events [#22](https://github.com/buildo/react-avenger/issues/22)
+- implement "sync queries flush" in state initializer [#20](https://github.com/buildo/react-avenger/issues/20)
 
 ## [v1.0.0](https://github.com/buildo/react-avenger/tree/v1.0.0) (2017-01-31)
 [Full Changelog](https://github.com/buildo/react-avenger/compare/v0.5.0...v1.0.0)
