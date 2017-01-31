@@ -3,11 +3,10 @@ import debug from 'debug';
 import t from 'tcomb';
 import shallowEqual from 'buildo-state/lib/shallowEqual'; // TODO(split)
 import connect from 'buildo-state/lib/connect'; // TODO(split)
-import some from 'lodash/some';
 import omit from 'lodash/omit';
-import mapValues from 'lodash/mapValues';
 import pick from 'lodash/pick';
 import every from 'lodash/every';
+import flattenDeep from 'lodash/flattenDeep';
 import _displayName from './displayName';
 
 const log = debug('react-avenger:queries');
@@ -15,8 +14,13 @@ const warn = debug('react-avenger:queries');
 warn.log = ::console.warn; // eslint-disable-line no-console
 
 export const QueriesContextTypes = {
-  avenger: React.PropTypes.object
+  graph: React.PropTypes.object.isRequired,
+  query: React.PropTypes.func.isRequired
 };
+
+const queryUpsetParams = q => flattenDeep(q.A).reduce((ac, k) => ({
+  ...ac, [k]: t.Any // TODO: when avenger/Query api is :+1:, use the param type here
+}), {});
 
 export default function queries(allQueries) {
   return function(declaration, {
@@ -39,11 +43,11 @@ export default function queries(allQueries) {
     const QueriesTypes = {
       readyState: t.struct(queryNames.reduce((ac, k) => ({
         ...ac, [k]: t.struct({
-          waiting: t.Boolean, fetching: t.Boolean, loading: t.Boolean, error: t.maybe(t.Any), ready: t.maybe(t.Boolean)
+          loading: t.Boolean, ready: t.Boolean
         })
       }), {})),
-      ...queryNames.reduce((ac, k, i) => ({
-        ...ac, [k]: t.maybe(allQueries[queryNames[i]].returnType)
+      ...queryNames.reduce((ac, k) => ({
+        ...ac, [k]: t.Any // TODO: when avenger/Query api is :+1:, use `returnType` here
       }), {})
     };
 
@@ -52,17 +56,17 @@ export default function queries(allQueries) {
     // TODO(gio): we should warn and/or fail here in case of
     // duplicate keys with different types. Not sure how to check that
     const connectDeclaration = queryNames.reduce((ac, queryName) => ({
-      ...ac, ...allQueries[queryName].upsetActualParams
+      ...ac, ...queryUpsetParams(allQueries[queryName])
     }), {});
 
     // true if no previous queries
     // or if params have changed for some query
-    const shouldSubscriptionUpdate = (queries, newQueries) => {
-      if (!queries && newQueries) {
+    const shouldSubscriptionUpdate = (params, newParams) => {
+      if (!params && newParams) {
         return true;
       }
 
-      return some(queryNames, k => !shallowEqual(queries[k], newQueries[k]));
+      return !shallowEqual(params, newParams);
     };
 
     // true if { ...connectedState, ...props } does not type match
@@ -98,19 +102,12 @@ export default function queries(allQueries) {
 
           constructor(props, context) {
             super(props, context);
-            // TODO(gio): support props renaming
-            const shouldBail = shouldBailSubscription(props, connectDeclaration);
-            if (shouldBail) {
-              bailingWarning(shouldBail);
-            }
-            this.state = shouldBail ? {
+
+            // no "query sync" api yet, just prepare the `readyState`
+            this.state = {
               readyState: queryNames.reduce((ac, k) => ({ ...ac, [k]: {
-                waiting: true, loading: true, fetching: false, ready: false
+                loading: true, ready: false
               } }), {})
-            } : {
-              ...context.avenger.queriesSync(queryNames.reduce((ac, queryName) => ({
-                ...ac, [queryName]: pick(props, Object.keys(allQueries[queryName].upsetActualParams))
-              }), {}))
             };
           }
 
@@ -121,30 +118,31 @@ export default function queries(allQueries) {
               return;
             }
 
-            const queries = queryNames.reduce((ac, queryName) => ({
-              ...ac, [queryName]: pick(props, Object.keys(allQueries[queryName].upsetActualParams))
-            }), {});
+            const params = pick(props, Object.keys(connectDeclaration));
 
-            if (shouldSubscriptionUpdate(this._queries, queries)) {
-              this._queries = queries;
+            if (shouldSubscriptionUpdate(this._params, params)) {
+              this._params = params;
 
               if (this._subscription) {
                 this._subscription.unsubscribe();
               }
 
-              // TODO(gio): support props renaming
-              this._subscription = this.context.avenger.queries(queries).subscribe(_queries => {
-                // add `ready` boolean param to readyState
-                const queriesState = {
-                  ..._queries,
-                  readyState: mapValues(_queries.readyState, (rs, queryName) => ({
-                    ...rs,
-                    // ready if values is not undefined, and if no readyState.error
-                    ready: _queries[queryName] !== void 0 && rs.error === void 0
-                  }))
-                };
-                this.setState(queriesState);
-              });
+              this._subscription = this.context.query(this.context.graph, queryNames, params)
+                .map(({ data }) => ({
+                  readyState: {
+                    ...Object.keys(data).reduce((ac, k) => ({
+                      ...ac, [k]: {
+                        loading: data[k].loading,
+                        // add `ready` boolean param to readyState
+                        ready: data[k].data !== void 0
+                      }
+                    }), {})
+                  },
+                  ...Object.keys(data).reduce((ac, k) => ({
+                    ...ac, [k]: data[k].data
+                  }), {})
+                }))
+                .subscribe(::this.setState);
             }
           }
 
