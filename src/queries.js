@@ -16,7 +16,8 @@ warn.log = ::console.warn; // eslint-disable-line no-console
 
 export const QueriesContextTypes = {
   graph: React.PropTypes.object.isRequired,
-  query: React.PropTypes.func.isRequired
+  query: React.PropTypes.func.isRequired,
+  querySync: React.PropTypes.func // not required if option `querySync=false`
 };
 
 const queryUpsetParams = q => flattenDeep(q.A).reduce((ac, k) => ({
@@ -45,7 +46,18 @@ export default function queries(allQueries) {
     //
     // Boolean
     //
-    pure = true
+    pure = true,
+
+    // whether to use `querySync` and flush the data available before
+    // first render() or not
+    // Defaults to `false` since it is typically unwanted client-side
+    // when rendering something, even an empty/loading view
+    // is better than waiting for a "long render"
+    // This must be `true` server-side, when there's a single render() pass
+    //
+    // Boolean
+    //
+    querySync = false
   } = {}) {
     // TODO(gio): support props renaming
     const queryNames = declaration;
@@ -119,22 +131,28 @@ export default function queries(allQueries) {
           constructor(props, context) {
             super(props, context);
 
-            const shouldBail = shouldBailSubscription(props, connectDeclaration);
-            if (shouldBail) {
-              bailingWarning(shouldBail);
-            }
-
-            this.state = shouldBail ? {
+            const emptyData = {
               readyState: queryNames.reduce((ac, k) => ({ ...ac, [k]: {
                 loading: true, ready: false
               } }), {})
-            } : {
-              ...mapQueriesToState(
-                context.querySync(
-                  context.graph, queryNames, pick(props, Object.keys(connectDeclaration))
-                )
-              )
             };
+
+            if (querySync) {
+              const shouldBail = shouldBailSubscription(props, connectDeclaration);
+              if (shouldBail) {
+                bailingWarning(shouldBail);
+              }
+
+              this.state = shouldBail ? emptyData : {
+                ...mapQueriesToState(
+                  context.querySync(
+                    context.graph, queryNames, pick(props, Object.keys(connectDeclaration))
+                  )
+                )
+              };
+            } else {
+              this.state = emptyData;
+            }
           }
 
           _subscribe(props) {
