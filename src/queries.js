@@ -2,7 +2,6 @@ import React from 'react';
 import debug from 'debug';
 import t from 'tcomb';
 import shallowEqual from 'buildo-state/lib/shallowEqual'; // TODO(split)
-import omit from 'lodash/omit';
 import pick from 'lodash/pick';
 import every from 'lodash/every';
 import flattenDeep from 'lodash/flattenDeep';
@@ -184,7 +183,7 @@ export default function queries(allQueries) {
         }
 
         getProps(props = this.props, state = this.state) {
-          return omit({ ...props, ...state }, Object.keys(QueryParamsTypes));
+          return { ...props, ...state };
         }
 
         render() {
@@ -195,6 +194,7 @@ export default function queries(allQueries) {
 
     decorator.InputType = QueryParamsTypes;
     decorator.OutputType = QueriesTypes;
+    decorator.Type = { ...decorator.InputType, ...decorator.OutputType };
 
     return decorator;
   };

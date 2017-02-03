@@ -1,7 +1,6 @@
 import React from 'react';
 import debug from 'debug';
 import pick from 'lodash/pick';
-import omit from 'lodash/omit';
 import mapValues from 'lodash/mapValues';
 import t from 'tcomb';
 import displayName from './displayName';
@@ -39,12 +38,8 @@ export default function commands(allCommands) {
           });
         }
 
-        getProps() {
-          return omit(this.props, Object.keys(CommandParamsTypes));
-        }
-
         render() {
-          return <Component {...this.getProps()} {...this._commands}/>;
+          return <Component {...this.props} {...this._commands}/>;
         }
       };
     };
@@ -54,6 +49,7 @@ export default function commands(allCommands) {
     // implicitly / before component own lifecycle
     decorator.InputType = mapValues(CommandParamsTypes, ty => t.maybe(ty));
     decorator.OutputType = ids.reduce((ac, k) => ({ ...ac, [k]: t.Function }), {});
+    decorator.Type = { ...decorator.InputType, ...decorator.OutputType };
 
     return decorator;
   };
