@@ -2,7 +2,6 @@ import React from 'react';
 import debug from 'debug';
 import t from 'tcomb';
 import shallowEqual from 'buildo-state/lib/shallowEqual'; // TODO(split)
-import connect from 'buildo-state/lib/connect'; // TODO(split)
 import omit from 'lodash/omit';
 import pick from 'lodash/pick';
 import every from 'lodash/every';
@@ -41,13 +40,6 @@ const mapQueriesToState = ({ data }) => ({
 
 export default function queries(allQueries) {
   return function(declaration, {
-    // `pure` param for the `@connect` decoration
-    // see `@connect` for more
-    //
-    // Boolean
-    //
-    pure = true,
-
     // whether to use `querySync` and flush the data available before
     // first render() or not
     // Defaults to `false` since it is typically unwanted client-side
@@ -59,7 +51,6 @@ export default function queries(allQueries) {
     //
     querySync = false
   } = {}) {
-    // TODO(gio): support props renaming
     const queryNames = declaration;
     if (process.env.NODE_ENV !== 'production') {
       queryNames.forEach(name => {
@@ -68,6 +59,11 @@ export default function queries(allQueries) {
         }
       });
     }
+
+    const QueryParamsTypes = queryNames.reduce((ac, queryName) => ({
+      ...ac, ...queryUpsetParams(allQueries[queryName])
+    }), {});
+
     const QueriesTypes = {
       readyState: t.struct(queryNames.reduce((ac, k) => ({
         ...ac, [k]: t.struct({
@@ -79,14 +75,6 @@ export default function queries(allQueries) {
       }), {})
     };
 
-    // create a @connect declaration to grab all possible
-    // query params from app state.
-    // TODO(gio): we should warn and/or fail here in case of
-    // duplicate keys with different types. Not sure how to check that
-    const connectDeclaration = queryNames.reduce((ac, queryName) => ({
-      ...ac, ...queryUpsetParams(allQueries[queryName])
-    }), {});
-
     // true if no previous queries
     // or if params have changed for some query
     const shouldSubscriptionUpdate = (params, newParams) => {
@@ -97,11 +85,11 @@ export default function queries(allQueries) {
       return !shallowEqual(params, newParams);
     };
 
-    // true if { ...connectedState, ...props } does not type match
+    // true if `props` do not type match
     // with the requested queries subscription params.
     // should never happen (there's a warning for this)
-    const shouldBailSubscription = (props, connectedTypes) => {
-      const failing = Object.keys(connectedTypes).filter(k => !connectedTypes[k].is(props[k]));
+    const shouldBailSubscription = props => {
+      const failing = Object.keys(QueryParamsTypes).filter(k => !QueryParamsTypes[k].is(props[k]));
       return failing.length > 0 ? failing : false;
     };
 
@@ -117,108 +105,97 @@ export default function queries(allQueries) {
         }
       };
 
-      return connect(connectDeclaration, {
-        pure,
-        // some params for queries cannot be retrieved implicitly from state!
-        // still, we want all the others
-        filterValid: false
-      })(
-        class QueriesWrapper extends React.Component {
-          static contextTypes = QueriesContextTypes;
+      return class QueriesWrapper extends React.Component {
+        static contextTypes = QueriesContextTypes;
 
-          static displayName = displayName;
+        static displayName = displayName;
 
-          constructor(props, context) {
-            super(props, context);
+        constructor(props, context) {
+          super(props, context);
 
-            const emptyData = {
-              readyState: queryNames.reduce((ac, k) => ({ ...ac, [k]: {
-                loading: true, ready: false
-              } }), {})
-            };
+          const emptyData = {
+            readyState: queryNames.reduce((ac, k) => ({ ...ac, [k]: {
+              loading: true, ready: false
+            } }), {})
+          };
 
-            if (querySync) {
-              const shouldBail = shouldBailSubscription(props, connectDeclaration);
-              if (shouldBail) {
-                bailingWarning(shouldBail);
-              }
-
-              this.state = shouldBail ? emptyData : {
-                ...mapQueriesToState(
-                  context.querySync(
-                    context.graph, queryNames, pick(props, Object.keys(connectDeclaration))
-                  )
-                )
-              };
-            } else {
-              this.state = emptyData;
-            }
-          }
-
-          _subscribe(props) {
-            const shouldBail = shouldBailSubscription(props, connectDeclaration);
+          if (querySync) {
+            const shouldBail = shouldBailSubscription(props);
             if (shouldBail) {
               bailingWarning(shouldBail);
-              return;
             }
 
-            const params = pick(props, Object.keys(connectDeclaration));
+            this.state = shouldBail ? emptyData : {
+              ...mapQueriesToState(
+                context.querySync(
+                  context.graph, queryNames, pick(props, Object.keys(QueryParamsTypes))
+                )
+              )
+            };
+          } else {
+            this.state = emptyData;
+          }
+        }
 
-            if (shouldSubscriptionUpdate(this._params, params)) {
-              this._params = params;
-
-              if (this._subscription) {
-                this._subscription.unsubscribe();
-              }
-
-              this._subscription = this.context.query(this.context.graph, queryNames, params)
-                .debounceTime(5)
-                .map(mapQueriesToState)
-                .subscribe(::this.setState);
-            }
+        _subscribe(props) {
+          const shouldBail = shouldBailSubscription(props, QueryParamsTypes);
+          if (shouldBail) {
+            bailingWarning(shouldBail);
+            return;
           }
 
-          componentDidMount() {
-            log(`${displayName} adding `, queryNames);
-            this._subscribe(this.props);
-          }
+          const params = pick(props, Object.keys(QueryParamsTypes));
 
-          componentWillReceiveProps(newProps) {
-            this._subscribe(newProps);
-          }
+          if (shouldSubscriptionUpdate(this._params, params)) {
+            this._params = params;
 
-          componentWillUnmount() {
-            log(`${displayName} removing queries`, queryNames);
             if (this._subscription) {
               this._subscription.unsubscribe();
             }
-          }
 
-          shouldComponentUpdate(newProps, newState) {
-            const allProps = this.getProps(newProps, newState);
-            // similar to connect/filterValid, we must render conditionally here
-            return every(connectDeclaration, (decl, k) => decl.is(allProps[k]));
-          }
-
-          getProps(props = this.props, state = this.state) {
-            // pass down everything except `transition`:
-            // this makes `@queries` and `@commands` application commutative
-            // but not wrt `@connect` (it should always be the innermost among these three)
-            return {
-              ...omit(props, 'transition'), ...state
-            };
-          }
-
-          render() {
-            return <Component {...this.getProps()}/>;
+            this._subscription = this.context.query(this.context.graph, queryNames, params)
+              .debounceTime(5)
+              .map(mapQueriesToState)
+              .subscribe(::this.setState);
           }
         }
-      );
+
+        componentDidMount() {
+          log(`${displayName} adding `, queryNames);
+          this._subscribe(this.props);
+        }
+
+        componentWillReceiveProps(newProps) {
+          this._subscribe(newProps);
+        }
+
+        componentWillUnmount() {
+          log(`${displayName} removing queries`, queryNames);
+          if (this._subscription) {
+            this._subscription.unsubscribe();
+          }
+        }
+
+        shouldComponentUpdate(newProps, newState) {
+          const allProps = this.getProps(newProps, newState);
+          // similar to connect/filterValid, we must render conditionally here
+          // TODO(gio): is this true (needed)?
+          return every(QueryParamsTypes, (T, k) => T.is(allProps[k]));
+        }
+
+        getProps(props = this.props, state = this.state) {
+          return omit({ ...props, ...state }, Object.keys(QueryParamsTypes));
+        }
+
+        render() {
+          return <Component {...this.getProps()}/>;
+        }
+      };
     };
-    decorator.Type = {
-      ...connectDeclaration,
-      ...QueriesTypes
-    };
+
+    decorator.InputType = QueryParamsTypes;
+    decorator.OutputType = QueriesTypes;
+
     return decorator;
   };
 }
