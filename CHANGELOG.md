@@ -2,6 +2,14 @@
 
 
 
+## [v2.0.0](https://github.com/buildo/react-avenger/tree/v2.0.0) (2017-02-06)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v2...v2.0.0)
+
+#### Breaking:
+
+- remove unnecessary `allQueries`/`allCommands` configuration [#25](https://github.com/buildo/react-avenger/issues/25)
+- remove dependency on buildo-state/connect (do not connect() internally) [#24](https://github.com/buildo/react-avenger/issues/24)
+
 ## [v2](https://github.com/buildo/react-avenger/tree/v2) (2016-06-08)
 [Full Changelog](https://github.com/buildo/react-avenger/compare/v1.1.0...v2)
 
