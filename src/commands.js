@@ -12,6 +12,10 @@ export const CommandsContextTypes = {
   commands: React.PropTypes.object
 };
 
+const commandUpsetParams = c => c.invalidateParams.reduce((ac, k) => ({
+  ...ac, [k]: t.Any // TODO: when avenger/Command api is :+1:, use the param type here
+}), {});
+
 export default function commands(allCommands) {
   return (ids) => {
     if (process.env.NODE_ENV !== 'production') {
@@ -23,7 +27,7 @@ export default function commands(allCommands) {
     }
 
     const CommandParamsTypes = ids.reduce((ac, k) => ({
-      ...ac, ...(allCommands[k].params || {})
+      ...ac, ...(commandUpsetParams(allCommands[k]))
     }), {});
 
     const decorator = Component => {
