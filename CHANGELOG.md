@@ -2,6 +2,13 @@
 
 
 
+## [v2.0.2](https://github.com/buildo/react-avenger/tree/v2.0.2) (2017-02-11)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v2.0.1...v2.0.2)
+
+#### Fixes (bugs & defects):
+
+- "use" also "invalidation params" in commands [#27](https://github.com/buildo/react-avenger/issues/27)
+
 ## [v2.0.1](https://github.com/buildo/react-avenger/tree/v2.0.1) (2017-02-11)
 [Full Changelog](https://github.com/buildo/react-avenger/compare/v2.0.0...v2.0.1)
 
