@@ -2,6 +2,9 @@
 
 
 
+## [v2.0.1](https://github.com/buildo/react-avenger/tree/v2.0.1) (2017-02-11)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v2.0.0...v2.0.1)
+
 ## [v2.0.0](https://github.com/buildo/react-avenger/tree/v2.0.0) (2017-02-06)
 [Full Changelog](https://github.com/buildo/react-avenger/compare/v2...v2.0.0)
 
