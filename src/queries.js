@@ -18,10 +18,6 @@ export const QueriesContextTypes = {
   querySync: React.PropTypes.func // not required if option `querySync=false`
 };
 
-const queryUpsetParams = q => flattenDeep(q.A).reduce((ac, k) => ({
-  ...ac, [k]: t.Any // TODO: when avenger/Query api is :+1:, use the param type here
-}), {});
-
 const mapQueriesToState = ({ data }) => ({
   readyState: {
     ...Object.keys(data).reduce((ac, k) => ({
@@ -60,7 +56,7 @@ export default function queries(allQueries) {
     }
 
     const QueryParamsTypes = queryNames.reduce((ac, queryName) => ({
-      ...ac, ...queryUpsetParams(allQueries[queryName])
+      ...ac, ...allQueries[queryName].upsetParams
     }), {});
 
     const QueriesTypes = {
@@ -70,7 +66,7 @@ export default function queries(allQueries) {
         })
       }), {})),
       ...queryNames.reduce((ac, k) => ({
-        ...ac, [k]: t.Any // TODO: when avenger/Query api is :+1:, use `returnType` here
+        ...ac, [k]: allQueries[k].returnType || t.Any
       }), {})
     };
 
