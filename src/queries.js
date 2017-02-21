@@ -4,7 +4,7 @@ import t from 'tcomb';
 import shallowEqual from 'buildo-state/lib/shallowEqual'; // TODO(split)
 import pick from 'lodash/pick';
 import every from 'lodash/every';
-import flattenDeep from 'lodash/flattenDeep';
+import mapValues from 'lodash/mapValues';
 import _displayName from './displayName';
 import 'rxjs/add/operator/debounceTime';
 
@@ -17,10 +17,6 @@ export const QueriesContextTypes = {
   query: React.PropTypes.func.isRequired,
   querySync: React.PropTypes.func // not required if option `querySync=false`
 };
-
-const queryUpsetParams = q => flattenDeep(q.A).reduce((ac, k) => ({
-  ...ac, [k]: t.Any // TODO: when avenger/Query api is :+1:, use the param type here
-}), {});
 
 const mapQueriesToState = ({ data }) => ({
   readyState: {
@@ -60,7 +56,7 @@ export default function queries(allQueries) {
     }
 
     const QueryParamsTypes = queryNames.reduce((ac, queryName) => ({
-      ...ac, ...queryUpsetParams(allQueries[queryName])
+      ...ac, ...allQueries[queryName].upsetParams
     }), {});
 
     const QueriesTypes = {
@@ -70,7 +66,7 @@ export default function queries(allQueries) {
         })
       }), {})),
       ...queryNames.reduce((ac, k) => ({
-        ...ac, [k]: t.Any // TODO: when avenger/Query api is :+1:, use `returnType` here
+        ...ac, [k]: allQueries[k].returnType || t.Any
       }), {})
     };
 
@@ -192,7 +188,12 @@ export default function queries(allQueries) {
       };
     };
 
-    decorator.InputType = QueryParamsTypes;
+    // If params are missing queries will be bailed anyway.
+    // In this way we are not being too eager and try to "connect too much" implicitly
+    // in react-container (some params can only be passed via props by the end user)
+    // TODO: consider doing this in react-container itself?
+    decorator.InputType = mapValues(QueryParamsTypes, t.maybe);
+
     decorator.OutputType = QueriesTypes;
     decorator.Type = { ...decorator.InputType, ...decorator.OutputType };
 

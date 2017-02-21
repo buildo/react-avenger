@@ -12,10 +12,6 @@ export const CommandsContextTypes = {
   commands: React.PropTypes.object
 };
 
-const commandUpsetParams = c => c.invalidateParams.reduce((ac, k) => ({
-  ...ac, [k]: t.Any // TODO: when avenger/Command api is :+1:, use the param type here
-}), {});
-
 export default function commands(allCommands) {
   return (ids) => {
     if (process.env.NODE_ENV !== 'production') {
@@ -27,7 +23,7 @@ export default function commands(allCommands) {
     }
 
     const CommandParamsTypes = ids.reduce((ac, k) => ({
-      ...ac, ...(commandUpsetParams(allCommands[k]))
+      ...ac, ...allCommands[k].invalidateParams
     }), {});
 
     const decorator = Component => {
@@ -51,7 +47,9 @@ export default function commands(allCommands) {
     // we can't do much better here (i.e. no `maybe`)
     // commands can have actual params that we'll never be able to retrieve
     // implicitly / before component own lifecycle
-    decorator.InputType = mapValues(CommandParamsTypes, ty => t.maybe(ty));
+    // TODO: consider doing this in react-container itself?
+    decorator.InputType = mapValues(CommandParamsTypes, t.maybe);
+
     decorator.OutputType = ids.reduce((ac, k) => ({ ...ac, [k]: t.Function }), {});
     decorator.Type = { ...decorator.InputType, ...decorator.OutputType };
 
