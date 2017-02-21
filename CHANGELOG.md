@@ -2,6 +2,13 @@
 
 
 
+## [v2.1.0](https://github.com/buildo/react-avenger/tree/v2.1.0) (2017-02-21)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v2.0.2...v2.1.0)
+
+#### New features:
+
+- use `Query.upsetParams` and `Command.invalidateParams` to produce `InputType` [#29](https://github.com/buildo/react-avenger/issues/29)
+
 ## [v2.0.2](https://github.com/buildo/react-avenger/tree/v2.0.2) (2017-02-11)
 [Full Changelog](https://github.com/buildo/react-avenger/compare/v2.0.1...v2.0.2)
 
