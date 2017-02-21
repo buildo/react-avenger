@@ -4,7 +4,7 @@ import t from 'tcomb';
 import shallowEqual from 'buildo-state/lib/shallowEqual'; // TODO(split)
 import pick from 'lodash/pick';
 import every from 'lodash/every';
-import flattenDeep from 'lodash/flattenDeep';
+import mapValues from 'lodash/mapValues';
 import _displayName from './displayName';
 import 'rxjs/add/operator/debounceTime';
 
@@ -188,7 +188,12 @@ export default function queries(allQueries) {
       };
     };
 
-    decorator.InputType = QueryParamsTypes;
+    // If params are missing queries will be bailed anyway.
+    // In this way we are not being too eager and try to "connect too much" implicitly
+    // in react-container (some params can only be passed via props by the end user)
+    // TODO: consider doing this in react-container itself?
+    decorator.InputType = mapValues(QueryParamsTypes, t.maybe);
+
     decorator.OutputType = QueriesTypes;
     decorator.Type = { ...decorator.InputType, ...decorator.OutputType };
 

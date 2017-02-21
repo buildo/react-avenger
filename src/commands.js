@@ -47,7 +47,9 @@ export default function commands(allCommands) {
     // we can't do much better here (i.e. no `maybe`)
     // commands can have actual params that we'll never be able to retrieve
     // implicitly / before component own lifecycle
-    decorator.InputType = mapValues(CommandParamsTypes, ty => t.maybe(ty));
+    // TODO: consider doing this in react-container itself?
+    decorator.InputType = mapValues(CommandParamsTypes, t.maybe);
+
     decorator.OutputType = ids.reduce((ac, k) => ({ ...ac, [k]: t.Function }), {});
     decorator.Type = { ...decorator.InputType, ...decorator.OutputType };
 
