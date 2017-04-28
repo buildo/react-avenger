@@ -4,7 +4,8 @@
   "description": "react bindings for avenger",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint src",
+    "lint": "scriptoni lint",
+    "lint-fix": "scriptoni lint --fix",
     "preversion": "npm run lint",
     "prepublish": "npm run build",
     "release-version": "smooth-release",
@@ -22,10 +23,8 @@
   "homepage": "https://github.com/buildo/react-avenger#readme",
   "devDependencies": {
     "babel-cli": "^6.22.2",
-    "babel-eslint": "^7.1.1",
     "babel-preset-buildo": "^0.1.1",
-    "eslint": "^3.14.0",
-    "eslint-config-buildo": "^0.2.0",
+    "scriptoni": "^0.4.3",
     "smooth-release": "^7.0.0"
   },
   "peerDependencies": {
