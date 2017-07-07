@@ -183,7 +183,7 @@ export default function queries(allQueries) {
         }
 
         render() {
-          return <Component {...this.getProps()}/>;
+          return <Component {...this.getProps()} />;
         }
       };
     };

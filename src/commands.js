@@ -39,7 +39,7 @@ export default function commands(allCommands) {
         }
 
         render() {
-          return <Component {...this.props} {...this._commands}/>;
+          return <Component {...this.props} {...this._commands} />;
         }
       };
     };
