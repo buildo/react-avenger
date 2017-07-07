@@ -2,6 +2,15 @@
 
 
 
+## [v2.1.1](https://github.com/buildo/react-avenger/tree/v2.1.1) (2017-07-07)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v2.1.0...v2.1.1)
+
+#### New features:
+
+- bump rxjs dep [#35](https://github.com/buildo/react-avenger/issues/35)
+- use scriptoni [#33](https://github.com/buildo/react-avenger/issues/33)
+- backport babel-preset-buildo [#31](https://github.com/buildo/react-avenger/issues/31)
+
 ## [v2.1.0](https://github.com/buildo/react-avenger/tree/v2.1.0) (2017-02-21)
 [Full Changelog](https://github.com/buildo/react-avenger/compare/v2.0.2...v2.1.0)
 
