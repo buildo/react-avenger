@@ -1,6 +1,6 @@
 {
   "name": "react-avenger",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "react bindings for avenger",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

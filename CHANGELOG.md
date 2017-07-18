@@ -2,6 +2,13 @@
 
 
 
+## [v3.0.1](https://github.com/buildo/react-avenger/tree/v3.0.1) (2017-07-18)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v3.0.0...v3.0.1)
+
+#### New features:
+
+- address TODO in bailingWarning [#39](https://github.com/buildo/react-avenger/issues/39)
+
 ## [v3.0.0](https://github.com/buildo/react-avenger/tree/v3.0.0) (2017-07-14)
 [Full Changelog](https://github.com/buildo/react-avenger/compare/v2.1.1...v3.0.0)
 
