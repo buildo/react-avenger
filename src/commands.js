@@ -1,12 +1,8 @@
 import React from 'react';
-import debug from 'debug';
 import pick from 'lodash/pick';
 import mapValues from 'lodash/mapValues';
 import t from 'tcomb';
 import displayName from './displayName';
-
-const warn = debug('react-avenger:commands');
-warn.log = ::console.warn; // eslint-disable-line no-console
 
 export const CommandsContextTypes = {
   commands: React.PropTypes.object
@@ -17,7 +13,7 @@ export default function commands(allCommands) {
     if (process.env.NODE_ENV !== 'production') {
       ids.forEach(id => {
         if (!allCommands[id]) {
-          warn(`command '${id}' not found! @commands declaration is: ${ids}`);
+          console.warn('react-avenger:commands', `command '${id}' not found! @commands declaration is: ${ids}`); // eslint-disable-line no-console
         }
       });
     }

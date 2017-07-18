@@ -9,8 +9,6 @@ import _displayName from './displayName';
 import 'rxjs/add/operator/debounceTime';
 
 const log = debug('react-avenger:queries');
-const warn = debug('react-avenger:queries');
-warn.log = ::console.warn; // eslint-disable-line no-console
 
 export const QueriesContextTypes = {
   graph: React.PropTypes.object.isRequired,
@@ -50,7 +48,7 @@ export default function queries(allQueries) {
     if (process.env.NODE_ENV !== 'production') {
       queryNames.forEach(name => {
         if (!allQueries[name]) {
-          warn(`query '${name}' not found! @queries declaration is: ${declaration}`);
+          console.warn('react-avenger:queries', `query '${name}' not found! @queries declaration is: ${declaration}`); // eslint-disable-line no-console
         }
       });
     }
@@ -93,10 +91,7 @@ export default function queries(allQueries) {
 
       const bailingWarning = shouldBail => {
         if (process.env.NODE_ENV === 'development') {
-          // TODO(gio): consider making this an always enabled log
-          // it's closer to an error/warning than a debug message
-          // (it should never happen)
-          warn(`Bailing queries subscription (missing ${shouldBail.join(', ')} input params) for ${displayName}`);
+          console.warn('react-avenger:queries', `Bailing queries subscription (missing ${shouldBail.join(', ')} input params) for ${displayName}`); // eslint-disable-line no-console
         }
       };
 
