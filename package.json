@@ -32,7 +32,7 @@
     "react": "0.14.x || 15.x"
   },
   "dependencies": {
-    "buildo-state": "^0.6.0",
+    "buildo-state": "^0.8.0",
     "rxjs": "^5.4.2"
   }
 }
