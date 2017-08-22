@@ -2,6 +2,13 @@
 
 
 
+## [v4.0.0](https://github.com/buildo/react-avenger/tree/v4.0.0) (2017-08-22)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v3.0.1...v4.0.0)
+
+#### Breaking:
+
+- breaking to update buildo-state version [#41](https://github.com/buildo/react-avenger/issues/41)
+
 ## [v3.0.1](https://github.com/buildo/react-avenger/tree/v3.0.1) (2017-07-18)
 [Full Changelog](https://github.com/buildo/react-avenger/compare/v3.0.0...v3.0.1)
 
