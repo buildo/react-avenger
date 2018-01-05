@@ -1,6 +1,6 @@
 import React from 'react';
 import debug from 'debug';
-import t from 'tcomb';
+import * as t from 'io-ts';
 import shallowEqual from 'buildo-state/lib/shallowEqual'; // TODO(split)
 import pick from 'lodash/pick';
 import every from 'lodash/every';
@@ -59,13 +59,13 @@ export default function queries(allQueries) {
     }), {});
 
     const QueriesTypes = {
-      readyState: t.struct(queryNames.reduce((ac, k) => ({
-        ...ac, [k]: t.struct({
-          loading: t.Boolean, ready: t.Boolean
+      readyState: t.strict(queryNames.reduce((ac, k) => ({
+        ...ac, [k]: t.strict({
+          loading: t.boolean, ready: t.boolean
         })
       }), {})),
       ...queryNames.reduce((ac, k) => ({
-        ...ac, [k]: allQueries[k].returnType || t.Any
+        ...ac, [k]: allQueries[k].returnType || t.any
       }), {})
     };
 
@@ -188,7 +188,7 @@ export default function queries(allQueries) {
     // In this way we are not being too eager and try to "connect too much" implicitly
     // in react-container (some params can only be passed via props by the end user)
     // TODO: consider doing this in react-container itself?
-    decorator.InputType = mapValues(QueryParamsTypes, t.maybe);
+    decorator.InputType = mapValues(QueryParamsTypes, type => t.union([type, t.undefined]));
 
     decorator.OutputType = QueriesTypes;
     decorator.Type = { ...decorator.InputType, ...decorator.OutputType };

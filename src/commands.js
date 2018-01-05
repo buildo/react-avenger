@@ -1,8 +1,8 @@
 import React from 'react';
 import pick from 'lodash/pick';
 import mapValues from 'lodash/mapValues';
-import t from 'tcomb';
 import PropTypes from 'prop-types';
+import * as t from 'io-ts';
 import displayName from './displayName';
 
 export const CommandsContextTypes = {
@@ -45,7 +45,7 @@ export default function commands(allCommands) {
     // commands can have actual params that we'll never be able to retrieve
     // implicitly / before component own lifecycle
     // TODO: consider doing this in react-container itself?
-    decorator.InputType = mapValues(CommandParamsTypes, t.maybe);
+    decorator.InputType = mapValues(CommandParamsTypes, type => t.union([type, t.undefined]));
 
     decorator.OutputType = ids.reduce((ac, k) => ({ ...ac, [k]: t.Function }), {});
     decorator.Type = { ...decorator.InputType, ...decorator.OutputType };
