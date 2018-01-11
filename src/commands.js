@@ -2,10 +2,11 @@ import React from 'react';
 import pick from 'lodash/pick';
 import mapValues from 'lodash/mapValues';
 import t from 'tcomb';
+import PropTypes from 'prop-types';
 import displayName from './displayName';
 
 export const CommandsContextTypes = {
-  commands: React.PropTypes.object
+  commands: PropTypes.object
 };
 
 export default function commands(allCommands) {

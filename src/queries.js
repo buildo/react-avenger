@@ -5,15 +5,16 @@ import shallowEqual from 'buildo-state/lib/shallowEqual'; // TODO(split)
 import pick from 'lodash/pick';
 import every from 'lodash/every';
 import mapValues from 'lodash/mapValues';
+import PropTypes from 'prop-types';
 import _displayName from './displayName';
 import 'rxjs/add/operator/debounceTime';
 
 const log = debug('react-avenger:queries');
 
 export const QueriesContextTypes = {
-  graph: React.PropTypes.object.isRequired,
-  query: React.PropTypes.func.isRequired,
-  querySync: React.PropTypes.func // not required if option `querySync=false`
+  graph: PropTypes.object.isRequired,
+  query: PropTypes.func.isRequired,
+  querySync: PropTypes.func // not required if option `querySync=false`
 };
 
 const mapQueriesToState = ({ data }) => ({
