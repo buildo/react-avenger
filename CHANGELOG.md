@@ -2,6 +2,13 @@
 
 
 
+## [v4.0.1](https://github.com/buildo/react-avenger/tree/v4.0.1) (2018-01-15)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v4.0.0...v4.0.1)
+
+#### Fixes (bugs & defects):
+
+- Broken in React16 because of React.PropTypes [#45](https://github.com/buildo/react-avenger/issues/45)
+
 ## [v4.0.0](https://github.com/buildo/react-avenger/tree/v4.0.0) (2017-08-22)
 [Full Changelog](https://github.com/buildo/react-avenger/compare/v3.0.1...v4.0.0)
 
