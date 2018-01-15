@@ -29,7 +29,7 @@
   },
   "peerDependencies": {
     "avenger": "^1.3.0",
-    "react": "0.14.x || 15.x"
+    "react": ">=0.14.9 <15 || >=15.3.x"
   },
   "dependencies": {
     "buildo-state": "^0.8.0",
