@@ -1,10 +1,8 @@
 import React from 'react';
 import debug from 'debug';
-import t from 'tcomb';
 import shallowEqual from 'buildo-state/lib/shallowEqual'; // TODO(split)
 import pick from 'lodash/pick';
 import every from 'lodash/every';
-import mapValues from 'lodash/mapValues';
 import PropTypes from 'prop-types';
 import _displayName from './displayName';
 import 'rxjs/add/operator/debounceTime';
@@ -32,167 +30,144 @@ const mapQueriesToState = ({ data }) => ({
   }), {})
 });
 
-export default function queries(allQueries) {
-  return function(declaration, {
-    // whether to use `querySync` and flush the data available before
-    // first render() or not
-    // Defaults to `false` since it is typically unwanted client-side
-    // when rendering something, even an empty/loading view
-    // is better than waiting for a "long render"
-    // This must be `true` server-side, when there's a single render() pass
-    //
-    // Boolean
-    //
-    querySync = false
-  } = {}) {
-    const queryNames = declaration;
-    if (process.env.NODE_ENV !== 'production') {
-      queryNames.forEach(name => {
-        if (!allQueries[name]) {
-          console.warn('react-avenger:queries', `query '${name}' not found! @queries declaration is: ${declaration}`); // eslint-disable-line no-console
-        }
-      });
+export default function declareQueries(declaration, {
+  // whether to use `querySync` and flush the data available before
+  // first render() or not
+  // Defaults to `false` since it is typically unwanted client-side
+  // when rendering something, even an empty/loading view
+  // is better than waiting for a "long render"
+  // This must be `true` server-side, when there's a single render() pass
+  //
+  // Boolean
+  //
+  querySync = false
+} = {}) {
+  const queryNames = declaration;
+
+  // true if no previous queries
+  // or if params have changed for some query
+  const shouldSubscriptionUpdate = (params, newParams) => {
+    if (!params && newParams) {
+      return true;
     }
 
-    const QueryParamsTypes = queryNames.reduce((ac, queryName) => ({
-      ...ac, ...allQueries[queryName].upsetParams
-    }), {});
+    return !shallowEqual(params, newParams);
+  };
 
-    const QueriesTypes = {
-      readyState: t.struct(queryNames.reduce((ac, k) => ({
-        ...ac, [k]: t.struct({
-          loading: t.Boolean, ready: t.Boolean
-        })
-      }), {})),
-      ...queryNames.reduce((ac, k) => ({
-        ...ac, [k]: allQueries[k].returnType || t.Any
-      }), {})
-    };
+  return Component => {
+    const displayName = _displayName('queries')(Component);
 
-    // true if no previous queries
-    // or if params have changed for some query
-    const shouldSubscriptionUpdate = (params, newParams) => {
-      if (!params && newParams) {
-        return true;
+    const bailingWarning = shouldBail => {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('react-avenger:queries', `Bailing queries subscription (missing ${shouldBail.join(', ')} input params) for ${displayName}`); // eslint-disable-line no-console
       }
-
-      return !shallowEqual(params, newParams);
     };
 
-    // true if `props` do not type match
-    // with the requested queries subscription params.
-    // should never happen (there's a warning for this)
-    const shouldBailSubscription = props => {
-      const failing = Object.keys(QueryParamsTypes).filter(k => !QueryParamsTypes[k].is(props[k]));
-      return failing.length > 0 ? failing : false;
-    };
+    return class QueriesWrapper extends React.Component {
+      static contextTypes = QueriesContextTypes;
 
-    const decorator = Component => {
-      const displayName = _displayName('queries')(Component);
+      static displayName = displayName;
 
-      const bailingWarning = shouldBail => {
-        if (process.env.NODE_ENV === 'development') {
-          console.warn('react-avenger:queries', `Bailing queries subscription (missing ${shouldBail.join(', ')} input params) for ${displayName}`); // eslint-disable-line no-console
-        }
-      };
+      constructor(props, context) {
+        super(props, context);
 
-      return class QueriesWrapper extends React.Component {
-        static contextTypes = QueriesContextTypes;
-
-        static displayName = displayName;
-
-        constructor(props, context) {
-          super(props, context);
-
-          const emptyData = {
-            readyState: queryNames.reduce((ac, k) => ({ ...ac, [k]: {
-              loading: true, ready: false
-            } }), {})
-          };
-
-          if (querySync) {
-            const shouldBail = shouldBailSubscription(props);
-            if (shouldBail) {
-              bailingWarning(shouldBail);
+        if (process.env.NODE_ENV !== 'production') {
+          queryNames.forEach(name => {
+            if (!context.graph[name]) {
+              console.warn('react-avenger:queries', `query '${name}' not found! queries declaration is: ${declaration}`); // eslint-disable-line no-console
             }
-
-            this.state = shouldBail ? emptyData : {
-              ...mapQueriesToState(
-                context.querySync(
-                  context.graph, queryNames, pick(props, Object.keys(QueryParamsTypes))
-                )
-              )
-            };
-          } else {
-            this.state = emptyData;
-          }
+          });
         }
 
-        _subscribe(props) {
-          const shouldBail = shouldBailSubscription(props, QueryParamsTypes);
+        this.QueryParamsTypes = queryNames.reduce((ac, queryName) => ({
+          ...ac, ...context.graph[queryName].upsetParams
+        }), {});
+
+        const emptyData = {
+          readyState: queryNames.reduce((ac, k) => ({ ...ac, [k]: {
+            loading: true, ready: false
+          } }), {})
+        };
+
+        if (querySync) {
+          const shouldBail = this.shouldBailSubscription(props);
           if (shouldBail) {
             bailingWarning(shouldBail);
-            return;
           }
 
-          const params = pick(props, Object.keys(QueryParamsTypes));
+          this.state = shouldBail ? emptyData : {
+            ...mapQueriesToState(
+              context.querySync(
+                context.graph, queryNames, pick(props, Object.keys(this.QueryParamsTypes))
+              )
+            )
+          };
+        } else {
+          this.state = emptyData;
+        }
+      }
 
-          if (shouldSubscriptionUpdate(this._params, params)) {
-            this._params = params;
+      shouldBailSubscription = props => {
+        // true if `props` do not type match
+        // with the requested queries subscription params.
+        // should never happen (there's a warning for this)
+        const failing = Object.keys(this.QueryParamsTypes).filter(k => !this.QueryParamsTypes[k].is(props[k]));
+        return failing.length > 0 ? failing : false;
+      };
 
-            if (this._subscription) {
-              this._subscription.unsubscribe();
-            }
-
-            this._subscription = this.context.query(this.context.graph, queryNames, params)
-              .debounceTime(5)
-              .map(mapQueriesToState)
-              .subscribe(::this.setState);
-          }
+      _subscribe(props) {
+        const shouldBail = this.shouldBailSubscription(props, this.QueryParamsTypes);
+        if (shouldBail) {
+          bailingWarning(shouldBail);
+          return;
         }
 
-        componentDidMount() {
-          log(`${displayName} adding `, queryNames);
-          this._subscribe(this.props);
-        }
+        const params = pick(props, Object.keys(this.QueryParamsTypes));
 
-        componentWillReceiveProps(newProps) {
-          this._subscribe(newProps);
-        }
+        if (shouldSubscriptionUpdate(this._params, params)) {
+          this._params = params;
 
-        componentWillUnmount() {
-          log(`${displayName} removing queries`, queryNames);
           if (this._subscription) {
             this._subscription.unsubscribe();
           }
-        }
 
-        shouldComponentUpdate(newProps, newState) {
-          const allProps = this.getProps(newProps, newState);
-          // similar to connect/filterValid, we must render conditionally here
-          // TODO(gio): is this true (needed)?
-          return every(QueryParamsTypes, (T, k) => T.is(allProps[k]));
+          this._subscription = this.context.query(this.context.graph, queryNames, params)
+            .debounceTime(5)
+            .map(mapQueriesToState)
+            .subscribe(::this.setState);
         }
+      }
 
-        getProps(props = this.props, state = this.state) {
-          return { ...props, ...state };
-        }
+      componentDidMount() {
+        log(`${displayName} adding `, queryNames);
+        this._subscribe(this.props);
+      }
 
-        render() {
-          return <Component {...this.getProps()} />;
+      componentWillReceiveProps(newProps) {
+        this._subscribe(newProps);
+      }
+
+      componentWillUnmount() {
+        log(`${displayName} removing queries`, queryNames);
+        if (this._subscription) {
+          this._subscription.unsubscribe();
         }
-      };
+      }
+
+      shouldComponentUpdate(newProps, newState) {
+        const allProps = this.getProps(newProps, newState);
+        // similar to connect/filterValid, we must render conditionally here
+        // TODO(gio): is this true (needed)?
+        return every(this.QueryParamsTypes, (T, k) => T.is(allProps[k]));
+      }
+
+      getProps(props = this.props, state = this.state) {
+        return { ...props, ...state };
+      }
+
+      render() {
+        return <Component {...this.getProps()} />;
+      }
     };
-
-    // If params are missing queries will be bailed anyway.
-    // In this way we are not being too eager and try to "connect too much" implicitly
-    // in react-container (some params can only be passed via props by the end user)
-    // TODO: consider doing this in react-container itself?
-    decorator.InputType = mapValues(QueryParamsTypes, t.maybe);
-
-    decorator.OutputType = QueriesTypes;
-    decorator.Type = { ...decorator.InputType, ...decorator.OutputType };
-
-    return decorator;
   };
 }
