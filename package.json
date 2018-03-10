@@ -10,10 +10,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "scriptoni lint",
-    "preversion": "npm run lint",
+    "preversion": "npm run lint && npm run typings-checker",
     "prepublish": "npm run build",
     "release-version": "smooth-release",
-    "build": "rm -rf lib && mkdir lib && babel src -d lib && cp src/index.d.ts lib"
+    "build": "rm -rf lib && mkdir lib && babel src -d lib && cp src/index.d.ts lib",
+    "typings-checker": "typings-checker --allow-expect-error --project typings-checker/tsconfig.json typings-checker/index.tsx"
   },
   "repository": {
     "type": "git",
@@ -26,10 +27,15 @@
   },
   "homepage": "https://github.com/buildo/react-avenger#readme",
   "devDependencies": {
+    "@types/react": "^16.0.40",
+    "avenger": "^2.0.1",
     "babel-cli": "^6.22.2",
     "babel-preset-buildo": "^0.1.1",
+    "react": "^16.2.0",
     "scriptoni": "^0.4.3",
-    "smooth-release": "^7.0.0"
+    "smooth-release": "^7.0.0",
+    "typescript": "^2.7.2",
+    "typings-checker": "^2.0.0"
   },
   "peerDependencies": {
     "avenger": "^2.0.1",
