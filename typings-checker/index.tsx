@@ -7,8 +7,14 @@ declare const foo: QueryReturn<{ token: string }, string>;
 
 const withFoo = declareQueries({ foo });
 
-// $ExpectType { token: string; }
-withFoo.Props;
+type WithFooProps = {
+  foo?: string;
+  readyState: {
+    foo: { loading: boolean; ready: boolean; }
+  }
+};
+declare var withFooProps: WithFooProps;
+withFooProps = withFoo.Props;
 
 const WithFoo = withFoo(C1);
 
@@ -24,8 +30,16 @@ declare const bar: QueryReturn<{ token: string }, number>;
 
 const withFooAndBar = declareQueries({ foo, bar });
 
-// $ExpectType { token: string; } | { token: string; }
-withFooAndBar.Props;
+type WithFooAndBarProps = {
+  foo?: string;
+  bar?: number;
+  readyState: {
+    foo: { loading: boolean; ready: boolean };
+    bar: { loading: boolean; ready: boolean };
+  };
+};
+declare var withFooAndBarProps: WithFooAndBarProps;
+withFooAndBarProps = withFooAndBar.Props;
 
 const WithFooAndBar = withFooAndBar(C1);
 
