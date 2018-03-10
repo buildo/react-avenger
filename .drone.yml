@@ -1,13 +1,13 @@
 build:
-  test-and-lint:
-    image: node:6
+  dostuff:
+    image: node:8
     environment:
       - NPM_CONFIG_CACHE=/drone/.npm
       - NPM_CONFIG_LOGLEVEL=warn
     commands:
       - npm i
-      - npm run lint
-      - npm run build
+      - npm run preversion
+      - npm run prepublish
 
 cache:
   mount:
