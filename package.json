@@ -2,10 +2,13 @@
   "name": "react-avenger",
   "version": "5.0.0",
   "description": "react bindings for avenger",
+  "files": [
+    "lib"
+  ],
+  "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "scriptoni lint",
-    "lint-fix": "scriptoni lint --fix",
     "preversion": "npm run lint",
     "prepublish": "npm run build",
     "release-version": "smooth-release",
@@ -28,7 +31,7 @@
     "smooth-release": "^7.0.0"
   },
   "peerDependencies": {
-    "avenger": "^1.3.0",
+    "avenger": "^2.0.1",
     "react": ">=0.14.9 <15 || >=15.3.x"
   },
   "dependencies": {

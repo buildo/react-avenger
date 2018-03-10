@@ -1,5 +1,5 @@
 {
   "presets":  [
-    ["buildo", { env: "react"}]
+    ["buildo", { "env": "react" }]
   ]
 }
