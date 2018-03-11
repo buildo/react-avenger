@@ -2,11 +2,10 @@ import { declareQueries } from '../src';
 import { QueryReturn } from 'avenger';
 import * as React from 'react';
 
-declare const C1: React.ComponentType<{ foo: string, bar: number }>;
 declare const foo: QueryReturn<{ token: string }, string>;
-
 const withFoo = declareQueries({ foo });
 
+// test the result type of declareQueries().Props
 type WithFooProps = {
   foo?: string;
   readyState: {
@@ -16,6 +15,8 @@ type WithFooProps = {
 declare var withFooProps: WithFooProps;
 withFooProps = withFoo.Props;
 
+declare type C1Props = { bar: number } & typeof withFoo.Props;
+declare const C1: React.ComponentType<C1Props>;
 const WithFoo = withFoo(C1);
 
 // $ExpectError Property 'bar' is missing in type '{}'.
@@ -27,9 +28,9 @@ const WithFoo = withFoo(C1);
 <WithFoo bar={10} token='foo' />;
 
 declare const bar: QueryReturn<{ token: string }, number>;
-
 const withFooAndBar = declareQueries({ foo, bar });
 
+// test the result type of declareQueries().Props
 type WithFooAndBarProps = {
   foo?: string;
   bar?: number;
@@ -41,7 +42,8 @@ type WithFooAndBarProps = {
 declare var withFooAndBarProps: WithFooAndBarProps;
 withFooAndBarProps = withFooAndBar.Props;
 
-const WithFooAndBar = withFooAndBar(C1);
+declare const C2: React.ComponentType<typeof withFooAndBar.Props>;
+const WithFooAndBar = withFooAndBar(C2);
 
 // $ExpectError Property 'token' is missing in type '{}'.
 <WithFooAndBar />;
