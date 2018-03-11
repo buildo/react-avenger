@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`declareQueries works 1`] = `
+<queries(mockConstructor)
+  token="foo"
+>
+  <mockConstructor
+    readyState={
+      Object {
+        "foo": Object {
+          "loading": true,
+          "ready": false,
+        },
+      }
+    }
+    token="foo"
+  >
+    {"token":"foo","readyState":{"foo":{"loading":true,"ready":false}}}
+  </mockConstructor>
+</queries(mockConstructor)>
+`;
