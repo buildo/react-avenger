@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`declareCommands works 1`] = `
+<commands(mockConstructor)
+  token="foo"
+>
+  <mockConstructor
+    doFoo={[Function]}
+    token="foo"
+  >
+    {"token":"foo"}
+  </mockConstructor>
+</commands(mockConstructor)>
+`;
