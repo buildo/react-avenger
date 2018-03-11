@@ -1,3 +1,4 @@
+/* global jest, describe, it, expect */
 import * as React from 'react';
 import declareQueries from './queries';
 import { Query } from 'avenger';
