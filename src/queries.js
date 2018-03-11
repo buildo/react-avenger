@@ -2,16 +2,11 @@ import React from 'react';
 import debug from 'debug';
 import shallowEqual from 'buildo-state/lib/shallowEqual'; // TODO(split)
 import pick from 'lodash/pick';
-import PropTypes from 'prop-types';
 import _displayName from './displayName';
 import 'rxjs/add/operator/debounceTime';
+import { query, querySync } from 'avenger';
 
 const log = debug('react-avenger:queries');
-
-export const QueriesContextTypes = {
-  query: PropTypes.func.isRequired,
-  querySync: PropTypes.func // not required if option `querySync=false`
-};
 
 const mapQueriesToState = ({ data }) => ({
   readyState: {
@@ -38,7 +33,7 @@ export default function declareQueries(queries, {
   //
   // Boolean
   //
-  querySync = false
+  querySync: _querySync = false
 } = {}) {
   const queryNames = Object.keys(queries);
 
@@ -55,15 +50,7 @@ export default function declareQueries(queries, {
   return Component => {
     const displayName = _displayName('queries')(Component);
 
-    const bailingWarning = shouldBail => {
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('react-avenger:queries', `Bailing queries subscription (missing ${shouldBail.join(', ')} input params) for ${displayName}`); // eslint-disable-line no-console
-      }
-    };
-
     return class QueriesWrapper extends React.Component {
-      static contextTypes = QueriesContextTypes;
-
       static displayName = displayName;
 
       constructor(props, context) {
@@ -79,17 +66,10 @@ export default function declareQueries(queries, {
           } }), {})
         };
 
-        if (querySync) {
-          const shouldBail = this.shouldBailSubscription(props);
-          if (shouldBail) {
-            bailingWarning(shouldBail);
-          }
-
-          this.state = shouldBail ? emptyData : {
-            ...mapQueriesToState(
-              context.querySync(queries, pick(props, this.QueryParamsTypes))
-            )
-          };
+        if (_querySync) {
+          this.state = mapQueriesToState(
+            querySync(queries, pick(props, this.QueryParamsTypes))
+          );
         } else {
           this.state = emptyData;
         }
@@ -105,7 +85,7 @@ export default function declareQueries(queries, {
             this._subscription.unsubscribe();
           }
 
-          this._subscription = this.context.query(queries, params)
+          this._subscription = query(queries, params)
             .debounceTime(5)
             .map(mapQueriesToState)
             .subscribe(this.setState.bind(this));
