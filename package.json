@@ -14,7 +14,7 @@
     "prepublish": "npm run build",
     "release-version": "smooth-release",
     "build": "rm -rf lib && mkdir lib && babel src -d lib && cp src/index.d.ts lib",
-    "typings-checker": "typings-checker --allow-expect-error --project typings-checker/tsconfig.json typings-checker/index.tsx"
+    "typings-checker": "typings-checker --allow-expect-error --project typings-checker/tsconfig.json typings-checker/queries.tsx typings-checker/commands.tsx"
   },
   "repository": {
     "type": "git",
