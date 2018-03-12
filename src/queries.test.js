@@ -13,17 +13,17 @@ const makeQueries = () => {
   return { foo };
 };
 
-const sleep = (timeout) => new Promise(resolve => {
-  setTimeout(resolve, timeout);
-});
+const sleep = timeout =>
+  new Promise(resolve => {
+    setTimeout(resolve, timeout);
+  });
 
 describe('declareQueries', () => {
-
   it('works', async () => {
     const { foo } = makeQueries();
     const render = jest.fn(JSON.stringify.bind(JSON));
     const WithFoo = declareQueries({ foo })(render);
-    const mounted = mount(<WithFoo token='foo' />);
+    const mounted = mount(<WithFoo token="foo" />);
     expect(mounted).toMatchSnapshot();
     await sleep(10);
     expect(render.mock.calls.length).toBe(2);
@@ -32,5 +32,4 @@ describe('declareQueries', () => {
     expect(render.mock.calls[1][0].readyState.foo).toEqual({ ready: true, loading: false });
     expect(render.mock.calls[1][0].foo).toBe('foo');
   });
-
 });

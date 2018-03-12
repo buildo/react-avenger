@@ -9,12 +9,13 @@
   "typings": "lib/index.d.ts",
   "scripts": {
     "test": "jest",
-    "lint": "scriptoni lint",
-    "preversion": "npm run lint && npm run typings-checker && npm test",
+    "preversion": "npm run prettier-check && npm run lint && npm run typings-checker && npm test",
     "prepublish": "npm run build",
     "release-version": "smooth-release",
     "build": "rm -rf lib && mkdir lib && babel src -d lib && cp src/index.d.ts lib",
-    "typings-checker": "typings-checker --allow-expect-error --project typings-checker/tsconfig.json typings-checker/queries.tsx typings-checker/commands.tsx"
+    "typings-checker": "typings-checker --allow-expect-error --project typings-checker/tsconfig.json typings-checker/queries.tsx typings-checker/commands.tsx",
+    "prettier-check": "prettier --list-different \"{src,typings-checker}/{**/*,*}.{js,jsx,ts,tsx}\"",
+    "lint": "scriptoni lint"
   },
   "repository": {
     "type": "git",
@@ -35,11 +36,14 @@
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "enzyme-to-json": "^3.3.1",
+    "eslint-config-buildo": "^0.2.2",
+    "eslint-config-prettier": "^2.9.0",
     "io-ts": "^1.0.5",
     "jest": "^22.4.2",
+    "prettier": "^1.11.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "scriptoni": "^0.4.3",
+    "scriptoni": "^0.10.1",
     "smooth-release": "^7.0.0",
     "typescript": "^2.7.2",
     "typings-checker": "^2.0.0"

@@ -10,31 +10,42 @@ const log = debug('react-avenger:queries');
 
 const mapQueriesToState = ({ data }) => ({
   readyState: {
-    ...Object.keys(data).reduce((ac, k) => ({
-      ...ac, [k]: {
-        loading: data[k].loading,
-        // add `ready` boolean param to readyState
-        ready: data[k].data !== void 0
-      }
-    }), {})
+    ...Object.keys(data).reduce(
+      (ac, k) => ({
+        ...ac,
+        [k]: {
+          loading: data[k].loading,
+          // add `ready` boolean param to readyState
+          ready: data[k].data !== void 0
+        }
+      }),
+      {}
+    )
   },
-  ...Object.keys(data).reduce((ac, k) => ({
-    ...ac, [k]: data[k].data
-  }), {})
+  ...Object.keys(data).reduce(
+    (ac, k) => ({
+      ...ac,
+      [k]: data[k].data
+    }),
+    {}
+  )
 });
 
-export default function declareQueries(queries, {
-  // whether to use `querySync` and flush the data available before
-  // first render() or not
-  // Defaults to `false` since it is typically unwanted client-side
-  // when rendering something, even an empty/loading view
-  // is better than waiting for a "long render"
-  // This must be `true` server-side, when there's a single render() pass
-  //
-  // Boolean
-  //
-  querySync: _querySync = false
-} = {}) {
+export default function declareQueries(
+  queries,
+  {
+    // whether to use `querySync` and flush the data available before
+    // first render() or not
+    // Defaults to `false` since it is typically unwanted client-side
+    // when rendering something, even an empty/loading view
+    // is better than waiting for a "long render"
+    // This must be `true` server-side, when there's a single render() pass
+    //
+    // Boolean
+    //
+    querySync: _querySync = false
+  } = {}
+) {
   const queryNames = Object.keys(queries);
 
   // true if no previous queries
@@ -56,20 +67,29 @@ export default function declareQueries(queries, {
       constructor(props, context) {
         super(props, context);
 
-        this.QueryParamsTypes = queryNames.reduce((ac, queryName) => ({
-          ...ac, ...queries[queryName].upsetParams
-        }), {});
+        this.QueryParamsTypes = queryNames.reduce(
+          (ac, queryName) => ({
+            ...ac,
+            ...queries[queryName].upsetParams
+          }),
+          {}
+        );
 
         const emptyData = {
-          readyState: queryNames.reduce((ac, k) => ({ ...ac, [k]: {
-            loading: true, ready: false
-          } }), {})
+          readyState: queryNames.reduce(
+            (ac, k) => ({
+              ...ac,
+              [k]: {
+                loading: true,
+                ready: false
+              }
+            }),
+            {}
+          )
         };
 
         if (_querySync) {
-          this.state = mapQueriesToState(
-            querySync(queries, pick(props, this.QueryParamsTypes))
-          );
+          this.state = mapQueriesToState(querySync(queries, pick(props, this.QueryParamsTypes)));
         } else {
           this.state = emptyData;
         }

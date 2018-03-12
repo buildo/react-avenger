@@ -14,13 +14,11 @@ const makeCommands = () => {
 };
 
 describe('declareCommands', () => {
-
   it('works', async () => {
     const { doFoo } = makeCommands();
     const render = jest.fn(JSON.stringify.bind(JSON));
     const WithDoFoo = declareCommands({ doFoo })(render);
-    const mounted = mount(<WithDoFoo token='foo' />);
+    const mounted = mount(<WithDoFoo token="foo" />);
     expect(mounted).toMatchSnapshot();
   });
-
 });

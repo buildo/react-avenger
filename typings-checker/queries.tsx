@@ -9,8 +9,8 @@ const withFoo = declareQueries({ foo });
 type WithFooProps = {
   foo?: string;
   readyState: {
-    foo: { loading: boolean; ready: boolean; }
-  }
+    foo: { loading: boolean; ready: boolean };
+  };
 };
 declare var withFooProps: WithFooProps;
 withFooProps = withFoo.Props;
@@ -25,7 +25,7 @@ const WithFoo = withFoo(C1);
 // $ExpectError Property 'token' is missing in type '{ bar: number; }'.
 <WithFoo bar={10} />;
 
-<WithFoo bar={10} token='foo' />;
+<WithFoo bar={10} token="foo" />;
 
 declare const bar: QueryReturn<{ token: string }, number>;
 const withFooAndBar = declareQueries({ foo, bar });
@@ -48,4 +48,4 @@ const WithFooAndBar = withFooAndBar(C2);
 // $ExpectError Property 'token' is missing in type '{}'.
 <WithFooAndBar />;
 
-<WithFooAndBar token='bar' />;
+<WithFooAndBar token="bar" />;

@@ -7,7 +7,7 @@ const withDoFoo = declareCommands({ doFoo });
 
 // test the result type of declareCommands().Props
 type WithDoFooProps = {
-  doFoo: (params: { token: string }) => Promise<void>
+  doFoo: (params: { token: string }) => Promise<void>;
 };
 declare var withDoFooProps: WithDoFooProps;
 withDoFooProps = withDoFoo.Props;
