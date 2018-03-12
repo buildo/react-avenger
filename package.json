@@ -12,7 +12,7 @@
     "preversion": "npm run prettier-check && npm run lint && npm run typings-checker && npm test",
     "prepublish": "npm run build",
     "release-version": "smooth-release",
-    "build": "rm -rf lib && mkdir lib && babel src -d lib && cp src/index.d.ts lib",
+    "build": "rm -rf lib && mkdir lib && babel src -d lib --ignore test.js && cp src/index.d.ts lib",
     "typings-checker": "typings-checker --allow-expect-error --project typings-checker/tsconfig.json typings-checker/queries.tsx typings-checker/commands.tsx",
     "prettier-check": "prettier --list-different \"{src,typings-checker}/{**/*,*}.{js,jsx,ts,tsx}\"",
     "lint": "scriptoni lint"
