@@ -5,17 +5,15 @@ exports[`declareQueries works 1`] = `
   token="foo"
 >
   <mockConstructor
-    readyState={
+    foo={
       Object {
-        "foo": Object {
-          "loading": true,
-          "ready": false,
-        },
+        "loading": true,
+        "ready": false,
       }
     }
     token="foo"
   >
-    {"token":"foo","readyState":{"foo":{"loading":true,"ready":false}}}
+    {"token":"foo","foo":{"loading":true,"ready":false}}
   </mockConstructor>
 </queries(mockConstructor)>
 `;

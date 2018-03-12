@@ -3,13 +3,22 @@ import { ObjectOmit } from 'typelevel-ts';
 
 type QueriesProps<Decl extends Queries> = { [k in keyof Decl]: Decl[k]['_A'] }[keyof Decl];
 
-type QueriesInnerProps<Decl extends Queries> = { [k in keyof Decl]?: Decl[k]['_P'] } & {
-  readyState: { [k in keyof Decl]: { loading: boolean; ready: boolean } };
+type QueriesInnerProps<Decl extends Queries> = {
+  [k in keyof Decl]: (
+    | {
+        ready: false;
+      }
+    | {
+        ready: true;
+        value: Decl[k]['_P'];
+      }) & {
+    loading: boolean;
+  }
 };
 
 type QueriesOuterProps<InnerProps extends {}, Decl extends Queries> = ObjectOmit<
   InnerProps,
-  keyof Decl | 'readyState'
+  keyof Decl
 > &
   QueriesProps<Decl>;
 

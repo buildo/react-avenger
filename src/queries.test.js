@@ -27,9 +27,11 @@ describe('declareQueries', () => {
     expect(mounted).toMatchSnapshot();
     await sleep(10);
     expect(render.mock.calls.length).toBe(2);
-    expect(render.mock.calls[0][0].readyState.foo).toEqual({ ready: false, loading: true });
-    expect(render.mock.calls[0][0].foo).toBe(undefined);
-    expect(render.mock.calls[1][0].readyState.foo).toEqual({ ready: true, loading: false });
-    expect(render.mock.calls[1][0].foo).toBe('foo');
+    expect(render.mock.calls[0][0].foo.ready).toBe(false);
+    expect(render.mock.calls[0][0].foo.loading).toBe(true);
+    expect(render.mock.calls[0][0].foo.value).toBe(undefined);
+    expect(render.mock.calls[1][0].foo.ready).toBe(true);
+    expect(render.mock.calls[1][0].foo.loading).toBe(false);
+    expect(render.mock.calls[1][0].foo.value).toBe('foo');
   });
 });

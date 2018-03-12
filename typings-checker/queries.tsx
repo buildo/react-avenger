@@ -7,9 +7,15 @@ const withFoo = declareQueries({ foo });
 
 // test the result type of declareQueries().Props
 type WithFooProps = {
-  foo?: string;
-  readyState: {
-    foo: { loading: boolean; ready: boolean };
+  foo: (
+    | {
+        ready: false;
+      }
+    | {
+        ready: true;
+        value: string;
+      }) & {
+    loading: boolean;
   };
 };
 declare var withFooProps: WithFooProps;
@@ -32,11 +38,25 @@ const withFooAndBar = declareQueries({ foo, bar });
 
 // test the result type of declareQueries().Props
 type WithFooAndBarProps = {
-  foo?: string;
-  bar?: number;
-  readyState: {
-    foo: { loading: boolean; ready: boolean };
-    bar: { loading: boolean; ready: boolean };
+  foo: (
+    | {
+        ready: false;
+      }
+    | {
+        ready: true;
+        value: string;
+      }) & {
+    loading: boolean;
+  };
+  bar: (
+    | {
+        ready: false;
+      }
+    | {
+        ready: true;
+        value: number;
+      }) & {
+    loading: boolean;
   };
 };
 declare var withFooAndBarProps: WithFooAndBarProps;
