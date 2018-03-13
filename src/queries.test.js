@@ -34,4 +34,18 @@ describe('declareQueries', () => {
     expect(render.mock.calls[1][0].foo.loading).toBe(false);
     expect(render.mock.calls[1][0].foo.value).toBe('foo');
   });
+
+  it('works with querySync', async () => {
+    const { foo } = makeQueries();
+    const render = jest.fn(JSON.stringify.bind(JSON));
+    const WithFoo = declareQueries({ foo }, { querySync: true })(render);
+    mount(<WithFoo token="foo" />);
+    await sleep(10);
+    const mounted = mount(<WithFoo token="foo" />);
+    expect(mounted).toMatchSnapshot();
+    expect(render.mock.calls.length).toBe(3);
+    expect(render.mock.calls[2][0].foo.ready).toBe(true);
+    expect(render.mock.calls[2][0].foo.loading).toBe(false);
+    expect(render.mock.calls[2][0].foo.value).toBe('foo');
+  });
 });

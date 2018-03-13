@@ -17,3 +17,22 @@ exports[`declareQueries works 1`] = `
   </mockConstructor>
 </queries(mockConstructor)>
 `;
+
+exports[`declareQueries works with querySync 1`] = `
+<queries(mockConstructor)
+  token="foo"
+>
+  <mockConstructor
+    foo={
+      Object {
+        "loading": false,
+        "ready": true,
+        "value": "foo",
+      }
+    }
+    token="foo"
+  >
+    {"token":"foo","foo":{"ready":true,"loading":false,"value":"foo"}}
+  </mockConstructor>
+</queries(mockConstructor)>
+`;

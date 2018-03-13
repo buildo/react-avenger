@@ -26,7 +26,14 @@ type DeclareQueriesReturn<Decl extends Queries> = (<InnerProps extends QueriesIn
   Component: React.ComponentType<InnerProps>
 ) => React.ComponentType<QueriesOuterProps<InnerProps, Decl>>) & { Props: QueriesInnerProps<Decl> };
 
-export function declareQueries<Decl extends Queries>(declaration: Decl): DeclareQueriesReturn<Decl>;
+type DeclareQueriesOptions = {
+  querySync?: boolean;
+};
+
+export function declareQueries<Decl extends Queries>(
+  declaration: Decl,
+  options?: DeclareQueriesOptions
+): DeclareQueriesReturn<Decl>;
 
 type CommandsProps<Decl extends Commands> = {
   [k in keyof Decl]: Partial<Decl[k]['_A']>

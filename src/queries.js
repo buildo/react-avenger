@@ -77,7 +77,9 @@ export default function declareQueries(
         );
 
         if (_querySync) {
-          this.state = mapQueriesToState(querySync(queries, pick(props, this.QueryParamsTypes)));
+          this.state = mapQueriesToState(
+            querySync(queries, pick(props, Object.keys(this.QueryParamsTypes)))
+          );
         } else {
           this.state = emptyData;
         }
