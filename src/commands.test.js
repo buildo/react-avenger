@@ -17,7 +17,7 @@ describe('declareCommands', () => {
   it('runs a command forwarding all props', async () => {
     const run = jest.fn(Promise.resolve.bind(Promise));
     const doFoo = Command({
-      params: { token: t.string },
+      params: { token: t.string, foo: t.string },
       run
     });
     class C extends React.Component {
