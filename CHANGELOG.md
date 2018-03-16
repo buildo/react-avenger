@@ -2,6 +2,25 @@
 
 
 
+## [v6.0.0](https://github.com/buildo/react-avenger/tree/v6.0.0) (2018-03-16)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v5.0.0...v6.0.0)
+
+#### Breaking:
+
+- improve type safety of query value & readyState [#52](https://github.com/buildo/react-avenger/issues/52)
+- update queries/commands api to accept references instead of string ids [#50](https://github.com/buildo/react-avenger/issues/50)
+- remove `loading` [#49](https://github.com/buildo/react-avenger/issues/49)
+- remove the factory wrapping [#48](https://github.com/buildo/react-avenger/issues/48)
+- replace tcomb with io-ts [#43](https://github.com/buildo/react-avenger/issues/43)
+
+#### New features:
+
+- Remove ids and use object names [#2](https://github.com/buildo/react-avenger/issues/2)
+- [context] consider using context to pass more than just avenger instance [#1](https://github.com/buildo/react-avenger/issues/1)
+
+## [v5.0.0](https://github.com/buildo/react-avenger/tree/v5.0.0) (2018-01-20)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v4.0.1...v5.0.0)
+
 ## [v4.0.1](https://github.com/buildo/react-avenger/tree/v4.0.1) (2018-01-15)
 [Full Changelog](https://github.com/buildo/react-avenger/compare/v4.0.0...v4.0.1)
 
