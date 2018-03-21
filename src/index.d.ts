@@ -1,5 +1,9 @@
-import { Queries, Commands } from 'avenger';
+import { QueryReturn, Commands } from 'avenger';
 import { ObjectOmit } from 'typelevel-ts';
+
+export type mixed = object | number | string | boolean | symbol | null;
+
+type Queries = { [k: string]: QueryReturn<any, mixed> };
 
 type QueriesProps<Decl extends Queries> = { [k in keyof Decl]: Decl[k]['_A'] }[keyof Decl];
 
