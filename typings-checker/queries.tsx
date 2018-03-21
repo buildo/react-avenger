@@ -2,6 +2,8 @@ import { declareQueries } from '../src';
 import { QueryReturn } from 'avenger';
 import * as React from 'react';
 
+// case 1: a declaration containing a single query
+
 declare const foo: QueryReturn<{ token: string }, string>;
 const withFoo = declareQueries({ foo });
 
@@ -32,6 +34,8 @@ const WithFoo = withFoo(C1);
 <WithFoo bar={10} />;
 
 <WithFoo bar={10} token="foo" />;
+
+// case 2: a declaration containing multiple queries with "conflicting" params
 
 declare const bar: QueryReturn<{ token: string }, number>;
 const withFooAndBar = declareQueries({ foo, bar });
@@ -69,3 +73,17 @@ const WithFooAndBar = withFooAndBar(C2);
 <WithFooAndBar />;
 
 <WithFooAndBar token="bar" />;
+
+// case 3: a declaration containing multiple queries with "non-conflicting" params
+
+declare const baz: QueryReturn<{ token2: string }, number>;
+const withFooAndBaz = declareQueries({ foo, baz });
+
+declare const C3: React.ComponentType<typeof withFooAndBaz.Props>;
+const WithFooAndBaz = withFooAndBaz(C3);
+
+// this is not an error at the moment :(
+<WithFooAndBaz token="token" />;
+// this is not an error at the moment :(
+<WithFooAndBaz token2="token2" />;
+<WithFooAndBaz token="token" token2="token2" />;
