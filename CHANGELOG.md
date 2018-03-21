@@ -2,6 +2,13 @@
 
 
 
+## [v6.0.1](https://github.com/buildo/react-avenger/tree/v6.0.1) (2018-03-21)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v6.0.0...v6.0.1)
+
+#### New features:
+
+- declareQueries should not accept queries returning undefined [#54](https://github.com/buildo/react-avenger/issues/54)
+
 ## [v6.0.0](https://github.com/buildo/react-avenger/tree/v6.0.0) (2018-03-16)
 [Full Changelog](https://github.com/buildo/react-avenger/compare/v5.0.0...v6.0.0)
 
