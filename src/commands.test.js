@@ -71,7 +71,7 @@ describe('declareCommands', () => {
     mount(<WithDoFoo token="token" fooParam="foo" barParam="bar" />);
     expect(fetchFoo.mock.calls.length).toBe(1);
     expect(fetchFoo.mock.calls[0][0]).toEqual({ fooParam: 'foo' });
-    await sleep(1000);
+    await sleep(10);
     expect(run.mock.calls.length).toBe(1);
     expect(run.mock.calls[0][0]).toEqual({
       foo: 'foo',
