@@ -4,7 +4,7 @@ import declareCommands from './commands';
 import { Command, Query } from 'avenger';
 import * as t from 'io-ts';
 import { mount } from 'enzyme';
-import sleep from './sleep';
+import sleep from './sleep.testUtil';
 
 describe('declareCommands', () => {
   it('works', async () => {
