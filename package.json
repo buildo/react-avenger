@@ -29,7 +29,7 @@
   "homepage": "https://github.com/buildo/react-avenger#readme",
   "devDependencies": {
     "@types/react": "^16.0.40",
-    "avenger": "^2.1.0",
+    "avenger": "^2.2.0",
     "babel-cli": "^6.22.2",
     "babel-jest": "^22.4.1",
     "babel-preset-buildo": "^0.1.1",
@@ -38,7 +38,7 @@
     "enzyme-to-json": "^3.3.1",
     "eslint-config-buildo": "^0.2.2",
     "eslint-config-prettier": "^2.9.0",
-    "io-ts": "^0.9.8",
+    "io-ts": "^1.0.5",
     "jest": "^22.4.2",
     "prettier": "^1.11.1",
     "react": "^16.2.0",
@@ -49,7 +49,7 @@
     "typings-checker": "^2.0.0"
   },
   "peerDependencies": {
-    "avenger": "^2.0.1",
+    "avenger": "^2.2.0",
     "react": ">=0.14.9 <15 || >=15.3.x"
   },
   "dependencies": {
