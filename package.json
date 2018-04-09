@@ -12,8 +12,8 @@
     "preversion": "npm run prettier-check && npm run lint && npm run typings-checker && npm test",
     "prepublish": "npm run build",
     "release-version": "smooth-release",
-    "build": "rm -rf lib && mkdir lib && babel src -d lib --ignore test.js && cp src/index.d.ts lib",
-    "typings-checker": "typings-checker --allow-expect-error --project typings-checker/tsconfig.json typings-checker/queries.tsx typings-checker/commands.tsx",
+    "build": "rm -rf lib && mkdir lib && babel src -d lib --ignore test*.js && cp src/index.d.ts lib",
+    "typings-checker": "typings-checker --allow-expect-error --project typings-checker/tsconfig.json $(find ./typings-checker -name \"*.ts*\")",
     "prettier-check": "prettier --list-different \"{src,typings-checker}/{**/*,*}.{js,jsx,ts,tsx}\"",
     "lint": "scriptoni lint"
   },
@@ -29,7 +29,7 @@
   "homepage": "https://github.com/buildo/react-avenger#readme",
   "devDependencies": {
     "@types/react": "^16.0.40",
-    "avenger": "^2.0.1",
+    "avenger": "^2.1.0",
     "babel-cli": "^6.22.2",
     "babel-jest": "^22.4.1",
     "babel-preset-buildo": "^0.1.1",
@@ -38,14 +38,14 @@
     "enzyme-to-json": "^3.3.1",
     "eslint-config-buildo": "^0.2.2",
     "eslint-config-prettier": "^2.9.0",
-    "io-ts": "^1.0.5",
+    "io-ts": "^0.9.8",
     "jest": "^22.4.2",
     "prettier": "^1.11.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "scriptoni": "^0.10.1",
     "smooth-release": "^7.0.0",
-    "typescript": "^2.7.2",
+    "typescript": "^2.8.1",
     "typings-checker": "^2.0.0"
   },
   "peerDependencies": {
