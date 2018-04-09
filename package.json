@@ -1,6 +1,6 @@
 {
   "name": "react-avenger",
-  "version": "6.0.1",
+  "version": "6.0.2",
   "description": "react bindings for avenger",
   "files": [
     "lib"
