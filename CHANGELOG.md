@@ -2,6 +2,13 @@
 
 
 
+## [v6.0.3](https://github.com/buildo/react-avenger/tree/v6.0.3) (2018-04-09)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v6.0.2...v6.0.3)
+
+#### New features:
+
+- upgrade to io-ts ^1 [#57](https://github.com/buildo/react-avenger/issues/57)
+
 ## [v6.0.2](https://github.com/buildo/react-avenger/tree/v6.0.2) (2018-04-09)
 [Full Changelog](https://github.com/buildo/react-avenger/compare/v6.0.1...v6.0.2)
 
