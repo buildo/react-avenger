@@ -6,13 +6,12 @@ import * as t from 'io-ts';
 declare const foo: QueryReturn<{ foo: string }, string>;
 declare const bar: QueryReturn<{ bar: string }, string>;
 
-const commandArgs = {
+const doFoo = Command({
   invalidates: { foo },
   dependencies: { bar },
   params: { token: t.string },
-  run: (({ token, bar }) => {}) as (params: { token: string; bar: string }) => Promise<void>
-};
-const doFoo = Command(commandArgs);
+  run: async ({ token, bar }) => {}
+});
 
 const withDoFoo = declareCommands({ doFoo });
 
