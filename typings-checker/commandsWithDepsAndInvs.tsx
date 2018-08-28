@@ -1,12 +1,5 @@
 import { declareCommands } from '../src';
-import {
-  Command,
-  CommandReturn,
-  CommandArgsNoInvsNoDeps,
-  QueryReturn,
-  CommandArgs,
-  CommandRun
-} from 'avenger';
+import { Command, QueryReturn } from 'avenger';
 import * as React from 'react';
 import * as t from 'io-ts';
 
