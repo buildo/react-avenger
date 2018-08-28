@@ -2,6 +2,13 @@
 
 
 
+## [v7.0.0](https://github.com/buildo/react-avenger/tree/v7.0.0) (2018-08-28)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v6.0.3...v7.0.0)
+
+#### Breaking:
+
+- support TS 2.9+ in next major version [#61](https://github.com/buildo/react-avenger/issues/61)
+
 ## [v6.0.3](https://github.com/buildo/react-avenger/tree/v6.0.3) (2018-04-09)
 [Full Changelog](https://github.com/buildo/react-avenger/compare/v6.0.2...v6.0.3)
 
