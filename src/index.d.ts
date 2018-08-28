@@ -1,7 +1,11 @@
 import { QueryReturn, Commands } from 'avenger';
-import { ObjectOmit } from 'typelevel-ts';
 
 export type mixed = object | number | string | boolean | symbol | null;
+
+type ObjectOmit<A extends object, K extends string | number | symbol> = Pick<
+  A,
+  Exclude<keyof A, K>
+>;
 
 type Queries = { [k: string]: QueryReturn<any, mixed> };
 
@@ -44,9 +48,9 @@ type CommandsProps<Decl extends Commands> = {
 }[keyof Decl];
 
 type CommandsInnerProps<Decl extends Commands> = {
-  [// TODO: currently commands also automagically forward all props to every command invocation
+  // TODO: currently commands also automagically forward all props to every command invocation
   // thus `params: Decl[k]['_A']` is too strict
-  k in keyof Decl]: (params: Decl[k]['_A']) => Promise<Decl[k]['_P']>
+  [k in keyof Decl]: (params: Decl[k]['_A']) => Promise<Decl[k]['_P']>
 };
 
 type CommandsOuterProps<InnerProps extends {}, Decl extends Commands> = ObjectOmit<
