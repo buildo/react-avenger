@@ -1,9 +1,13 @@
 import { declareCommands } from '../src';
+import { declareQueries } from '../src';
 import { CommandReturn } from 'avenger';
 import * as React from 'react';
 
 declare const doFoo: CommandReturn<{ token: string }, void>;
 const withDoFoo = declareCommands({ doFoo });
+
+// $ExpectError Type '"CommandReturn"' is not assignable to type '"QueryReturn"'.
+const withDoFooWrong = declareQueries({ doFoo });
 
 // test the result type of declareCommands().Props
 type WithDoFooProps = {

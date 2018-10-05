@@ -1,4 +1,4 @@
-import { declareQueries } from '../src';
+import { declareQueries, declareCommands } from '../src';
 import { QueryReturn } from 'avenger';
 import * as React from 'react';
 
@@ -6,6 +6,9 @@ import * as React from 'react';
 
 declare const foo: QueryReturn<{ token: string }, string>;
 const withFoo = declareQueries({ foo });
+
+// $ExpectError Type '"QueryReturn"' is not assignable to type '"CommandReturn"'.
+const withFooWrong = declareCommands({ foo });
 
 // test the result type of declareQueries().Props
 type WithFooProps = {
@@ -82,8 +85,8 @@ const withFooAndBaz = declareQueries({ foo, baz });
 declare const C3: React.ComponentType<typeof withFooAndBaz.Props>;
 const WithFooAndBaz = withFooAndBaz(C3);
 
-// this is not an error at the moment :(
+// $ExpectError Property 'token2' is missing in type '{ token: string; }'.
 <WithFooAndBaz token="token" />;
-// this is not an error at the moment :(
+// $ExpectError Property 'token' is missing in type '{ token2: string; }'.
 <WithFooAndBaz token2="token2" />;
 <WithFooAndBaz token="token" token2="token2" />;

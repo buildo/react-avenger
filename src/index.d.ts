@@ -1,4 +1,4 @@
-import { QueryReturn, Commands } from 'avenger';
+import { QueryReturn, Commands, FlattenObject } from 'avenger';
 
 export type mixed = object | number | string | boolean | symbol | null;
 
@@ -9,7 +9,7 @@ type ObjectOmit<A extends object, K extends string | number | symbol> = Pick<
 
 type Queries = { [k: string]: QueryReturn<any, mixed> };
 
-type QueriesProps<Decl extends Queries> = { [k in keyof Decl]: Decl[k]['_A'] }[keyof Decl];
+type QueriesProps<Decl extends Queries> = FlattenObject<{ [k in keyof Decl]: Decl[k]['_A'] }>
 
 type QueriesInnerProps<Decl extends Queries> = {
   [k in keyof Decl]: (
@@ -43,9 +43,9 @@ export function declareQueries<Decl extends Queries>(
   options?: DeclareQueriesOptions
 ): DeclareQueriesReturn<Decl>;
 
-type CommandsProps<Decl extends Commands> = {
+type CommandsProps<Decl extends Commands> = FlattenObject<{
   [k in keyof Decl]: Partial<Decl[k]['_A']>
-}[keyof Decl];
+}>;
 
 type CommandsInnerProps<Decl extends Commands> = {
   // TODO: currently commands also automagically forward all props to every command invocation
