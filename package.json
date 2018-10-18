@@ -29,7 +29,7 @@
   "homepage": "https://github.com/buildo/react-avenger#readme",
   "devDependencies": {
     "@types/react": "^16.0.40",
-    "avenger": "^3.0.0",
+    "avenger": "^4.0.0",
     "babel-cli": "^6.22.2",
     "babel-jest": "^22.4.1",
     "babel-preset-buildo": "^0.1.1",
