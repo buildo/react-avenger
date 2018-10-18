@@ -8,18 +8,18 @@ import { query, querySync } from 'avenger';
 
 const log = debug('react-avenger:queries');
 
-const mapQueriesToState = ({ data }) =>
-  Object.keys(data).reduce(
-    (ac, k) => ({
+const mapQueriesToState = ({ data }, prevState) =>
+  Object.keys(data).reduce((ac, k) => {
+    const value = 'data' in data[k] ? data[k].data : (prevState[k] && prevState[k].data) || void 0;
+    return {
       ...ac,
       [k]: {
-        ready: data[k].data !== void 0,
+        ready: value !== void 0,
         loading: data[k].loading,
-        value: data[k].data
+        value
       }
-    }),
-    {}
-  );
+    };
+  }, {});
 
 export default function declareQueries(
   queries,
@@ -78,7 +78,8 @@ export default function declareQueries(
 
         if (_querySync) {
           this.state = mapQueriesToState(
-            querySync(queries, pick(props, Object.keys(this.QueryParamsTypes)))
+            querySync(queries, pick(props, Object.keys(this.QueryParamsTypes))),
+            {}
           );
         } else {
           this.state = emptyData;
@@ -97,7 +98,7 @@ export default function declareQueries(
 
           this._subscription = query(queries, params)
             .debounceTime(5)
-            .map(mapQueriesToState)
+            .map(event => mapQueriesToState(event, this.state))
             .subscribe(this.setState.bind(this));
         }
       }
