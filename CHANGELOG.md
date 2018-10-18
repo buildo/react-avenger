@@ -2,6 +2,21 @@
 
 
 
+## [v8.0.0](https://github.com/buildo/react-avenger/tree/v8.0.0) (2018-10-18)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v7.0.0...v8.0.0)
+
+#### Breaking:
+
+- update avenger dep and adapt to changes in event format [#69](https://github.com/buildo/react-avenger/issues/69)
+
+#### Fixes (bugs & defects):
+
+- TS: `declareQueries` accepts commands and viceversa [#63](https://github.com/buildo/react-avenger/issues/63)
+
+#### New features:
+
+- queries: warn for `undefined` query return values [#16](https://github.com/buildo/react-avenger/issues/16)
+
 ## [v7.0.0](https://github.com/buildo/react-avenger/tree/v7.0.0) (2018-08-28)
 [Full Changelog](https://github.com/buildo/react-avenger/compare/v6.0.3...v7.0.0)
 
