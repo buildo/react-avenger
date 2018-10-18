@@ -10,7 +10,8 @@ const log = debug('react-avenger:queries');
 
 const mapQueriesToState = ({ data }, prevState) =>
   Object.keys(data).reduce((ac, k) => {
-    const value = 'data' in data[k] ? data[k].data : (prevState[k] && prevState[k].data) || void 0;
+    const value =
+      data[k].data !== void 0 ? data[k].data : (prevState[k] && prevState[k].value) || void 0;
     return {
       ...ac,
       [k]: {
