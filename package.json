@@ -40,7 +40,7 @@
     "enzyme-to-json": "^3.3.1",
     "eslint-config-buildo": "^0.2.2",
     "eslint-config-prettier": "^2.9.0",
-    "io-ts": "^1.0.5",
+    "io-ts": "1.3.3",
     "jest": "^23.5.0",
     "prettier": "^1.11.1",
     "react": "^16.2.0",
