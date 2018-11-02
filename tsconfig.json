@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "lib": [
+      "es2015"
+    ],
     "noEmit": true,
     "strict": true,
     "jsx": "react"

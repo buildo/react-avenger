@@ -13,7 +13,7 @@
     "prepublish": "npm run build",
     "release-version": "smooth-release",
     "build": "rm -rf lib && mkdir lib && babel src -d lib --ignore test*.js && cp src/index.d.ts lib",
-    "typings-checker": "typings-checker --allow-expect-error --project typings-checker/tsconfig.json $(find ./typings-checker -name \"*.ts*\")",
+    "typings-checker": "typings-checker --allow-expect-error --project ./tsconfig.json $(find ./typings-checker -name \"*.ts*\")",
     "prettier-check": "prettier --list-different \"{src,typings-checker}/{**/*,*}.{js,jsx,ts,tsx}\"",
     "lint": "scriptoni lint"
   },
@@ -28,6 +28,8 @@
   },
   "homepage": "https://github.com/buildo/react-avenger#readme",
   "devDependencies": {
+    "@types/enzyme": "^3.1.14",
+    "@types/jest": "^23.3.9",
     "@types/react": "^16.0.40",
     "avenger": "^4.0.0",
     "babel-cli": "^6.22.2",
@@ -45,7 +47,8 @@
     "react-dom": "^16.2.0",
     "scriptoni": "^0.10.1",
     "smooth-release": "^7.0.0",
-    "typescript": "^2.8.1",
+    "ts-jest": "^23.10.4",
+    "typescript": "^3.1.6",
     "typings-checker": "^2.0.0"
   },
   "peerDependencies": {
@@ -58,11 +61,19 @@
     "rxjs": "^5.4.2"
   },
   "jest": {
-    "setupFiles": [
-      "./jestSetup.js"
-    ],
+    "setupTestFrameworkScriptFile": "./jestSetup.js",
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
+    ],
+    "transform": {
+      "^.+\\.js$": "babel-jest",
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(js|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
     ]
   }
 }
