@@ -1,7 +1,6 @@
-/* global jest, describe, it, expect */
 import * as React from 'react';
-import declareCommands from './commands';
-import { Command, Query } from 'avenger';
+import { declareCommands } from './index';
+import { Command, Query, available } from 'avenger';
 import * as t from 'io-ts';
 import { mount } from 'enzyme';
 import sleep from './sleep.testUtil';
@@ -21,15 +20,17 @@ describe('declareCommands', () => {
       params: { token: t.string, foo: t.string },
       run
     });
-    class C extends React.Component {
+    const withDoFooCommands = declareCommands({ doFoo });
+    class C extends React.Component<typeof withDoFooCommands.Props> {
       componentDidMount() {
+        // @ts-ignore (doFoo automatically forwards this.props, but TS does not know that)
         this.props.doFoo();
       }
       render() {
         return null;
       }
     }
-    const WithDoFoo = declareCommands({ doFoo })(C);
+    const WithDoFoo = withDoFooCommands(C);
     mount(<WithDoFoo token="foo" foo="bar" />);
     expect(run.mock.calls.length).toBe(1);
     expect(run.mock.calls[0][0]).toEqual({ token: 'foo', foo: 'bar' });
@@ -39,10 +40,12 @@ describe('declareCommands', () => {
     const fetchFoo = jest.fn(({ fooParam }) => Promise.resolve(fooParam));
     const foo = Query({
       params: { fooParam: t.string },
+      cacheStrategy: available,
       fetch: fetchFoo
     });
     const bar = Query({
       params: { barParam: t.string },
+      cacheStrategy: available,
       fetch: ({ barParam }) => Promise.resolve(barParam)
     });
 
@@ -57,9 +60,11 @@ describe('declareCommands', () => {
       params: { token: t.string },
       run
     });
-    //eslint-disable-next-line
-    class C extends React.Component {
+    const withDoFooCommands = declareCommands({ doFoo });
+
+    class C extends React.Component<typeof withDoFooCommands.Props> {
       componentDidMount() {
+        // @ts-ignore (doFoo automatically forwards this.props, but TS does not know that)
         this.props.doFoo();
         expect(Object.keys(this.props)).toEqual(['token', 'fooParam', 'barParam', 'doFoo']);
       }
@@ -67,7 +72,7 @@ describe('declareCommands', () => {
         return null;
       }
     }
-    const WithDoFoo = declareCommands({ doFoo })(C);
+    const WithDoFoo = withDoFooCommands(C);
     mount(<WithDoFoo token="token" fooParam="foo" barParam="bar" />);
     expect(fetchFoo.mock.calls.length).toBe(1);
     expect(fetchFoo.mock.calls[0][0]).toEqual({ fooParam: 'foo' });

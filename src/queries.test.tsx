@@ -1,6 +1,5 @@
-/* global jest, describe, it, expect */
 import * as React from 'react';
-import declareQueries from './queries';
+import { declareQueries } from './index';
 import { Query } from 'avenger';
 import * as t from 'io-ts';
 import { mount } from 'enzyme';
@@ -13,7 +12,7 @@ const makeQueries = () => {
   return { foo };
 };
 
-const sleep = timeout =>
+const sleep = (timeout: number) =>
   new Promise(resolve => {
     setTimeout(resolve, timeout);
   });
