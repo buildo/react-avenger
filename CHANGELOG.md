@@ -2,6 +2,13 @@
 
 
 
+## [v8.0.1](https://github.com/buildo/react-avenger/tree/v8.0.1) (2018-11-02)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v8.0.0...v8.0.1)
+
+#### Fixes (bugs & defects):
+
+- inferred props resulting from `declare*` are wrong [#64](https://github.com/buildo/react-avenger/issues/64)
+
 ## [v8.0.0](https://github.com/buildo/react-avenger/tree/v8.0.0) (2018-10-18)
 [Full Changelog](https://github.com/buildo/react-avenger/compare/v7.0.0...v8.0.0)
 
