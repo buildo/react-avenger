@@ -9,7 +9,7 @@
   "typings": "lib/index.d.ts",
   "scripts": {
     "test": "jest",
-    "preversion": "npm run prettier-check && npm run lint && npm run typings-checker && npm test",
+    "preversion": "npm run prettier-check && npm run typings-checker && npm test",
     "prepublish": "npm run build",
     "release-version": "smooth-release",
     "build": "rm -rf lib && mkdir lib && babel src -d lib --ignore test*.js && cp src/index.d.ts lib",
