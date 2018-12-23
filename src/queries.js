@@ -3,7 +3,7 @@ import debug from 'debug';
 import shallowEqual from 'buildo-state/lib/shallowEqual'; // TODO(split)
 import pick from 'lodash/pick';
 import _displayName from './displayName';
-import 'rxjs/add/operator/debounceTime';
+import { debounceTime } from 'rxjs/operators';
 import { query, querySync } from 'avenger';
 
 const log = debug('react-avenger:queries');
@@ -98,7 +98,7 @@ export default function declareQueries(
           }
 
           this._subscription = query(queries, params)
-            .debounceTime(5)
+            .pipe(debounceTime(5))
             .map(event => mapQueriesToState(event, this.state))
             .subscribe(this.setState.bind(this));
         }
