@@ -85,7 +85,7 @@ const withFooAndBaz = declareQueries({ foo, baz });
 declare const C3: React.ComponentType<typeof withFooAndBaz.Props>;
 const WithFooAndBaz = withFooAndBaz(C3);
 
-// $ExpectError  Property 'token2' is missing in type '{ token: string; }' but required in type '{ token2: string; }'.
+// $ExpectError Property 'token2' is missing in type '{ token: string; }' but required in type '{ token2: string; }'.
 <WithFooAndBaz token="token" />;
 // $ExpectError Property 'token' is missing in type '{ token2: string; }' but required in type '{ token: string; }'.
 <WithFooAndBaz token2="token2" />;
