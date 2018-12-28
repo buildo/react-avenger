@@ -1,10 +1,10 @@
 import * as React from 'react';
-import debug from 'debug';
 import { shallowEqual } from './shallowEqual';
 import { displayName as _displayName } from './displayName';
 import 'rxjs/add/operator/debounceTime';
 import { query, querySync } from 'avenger';
 const pick = require('lodash/pick');
+const debug = require('debug');
 
 const log = debug('react-avenger:queries');
 

@@ -9,8 +9,6 @@
     "declaration": false,
     "allowJs": true,
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "module": "commonjs",
     "jsx": "react"
   }

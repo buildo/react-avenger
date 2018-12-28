@@ -27,8 +27,10 @@
   },
   "homepage": "https://github.com/buildo/react-avenger#readme",
   "devDependencies": {
+    "@types/debug": "0.0.31",
     "@types/enzyme": "^3.1.14",
     "@types/jest": "^23.3.9",
+    "@types/lodash": "^4.14.119",
     "@types/react": "^16.0.40",
     "avenger": "^4.0.2",
     "babel-cli": "^6.22.2",
