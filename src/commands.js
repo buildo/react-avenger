@@ -1,7 +1,7 @@
-import React from 'react';
-import mapValues from 'lodash/mapValues';
+import * as React from 'react';
 import displayName from './displayName';
 import { runCommand } from 'avenger';
+const mapValues = require('lodash/mapValues');
 
 export default function declareCommands(commands) {
   return Component => {
