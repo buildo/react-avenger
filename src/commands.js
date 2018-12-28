@@ -1,5 +1,5 @@
 import * as React from 'react';
-import displayName from './displayName';
+import { displayName } from './displayName';
 import { runCommand } from 'avenger';
 const mapValues = require('lodash/mapValues');
 
