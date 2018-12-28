@@ -1,6 +1,6 @@
 import React from 'react';
 import debug from 'debug';
-import shallowEqual from 'buildo-state/lib/shallowEqual'; // TODO(split)
+import { shallowEqual } from './shallowEqual';
 import pick from 'lodash/pick';
 import _displayName from './displayName';
 import 'rxjs/add/operator/debounceTime';
