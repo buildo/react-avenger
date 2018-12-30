@@ -433,7 +433,7 @@ export class RemoteFailure<L, A> {
   }
 
   ap<B>(fab: RemoteData<L, Function1<A, B>>): RemoteData<L, B> {
-    return fab.fold(initial, fab, () => fab as any, () => this); //tslint:disable-line no-use-before-declare
+    return fab.fold(fab, () => fab as any, () => this); //tslint:disable-line no-use-before-declare
   }
 
   chain<B>(f: Function1<A, RemoteData<L, B>>): RemoteData<L, B> {
