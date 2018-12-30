@@ -1,10 +1,10 @@
-import React from 'react';
-import debug from 'debug';
-import shallowEqual from 'buildo-state/lib/shallowEqual'; // TODO(split)
-import pick from 'lodash/pick';
-import _displayName from './displayName';
+import * as React from 'react';
+import { shallowEqual } from './shallowEqual';
+import { displayName as _displayName } from './displayName';
 import 'rxjs/add/operator/debounceTime';
 import { query, querySync } from 'avenger';
+const pick = require('lodash/pick');
+const debug = require('debug');
 
 const log = debug('react-avenger:queries');
 

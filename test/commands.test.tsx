@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { declareCommands } from './index';
+import { declareCommands } from '../src';
 import { Command, Query, available } from 'avenger';
 import * as t from 'io-ts';
 import { mount } from 'enzyme';
-import sleep from './sleep.testUtil';
+import sleep from './sleep';
 
 describe('declareCommands', () => {
   it('works', async () => {

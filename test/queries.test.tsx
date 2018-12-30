@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { declareQueries } from './index';
+import { declareQueries } from '../src';
 import { Query } from 'avenger';
 import * as t from 'io-ts';
 import { mount } from 'enzyme';
