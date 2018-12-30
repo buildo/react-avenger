@@ -44,23 +44,19 @@ const concatPendings = <L, A>(a: RemotePending<L, A>, b: RemotePending<L, A>): R
     const progressA = a.progress.value;
     const progressB = b.progress.value;
     if (progressA.total.isNone() || progressB.total.isNone()) {
-      //tslint:disable no-use-before-declare
       return progress({
         loaded: progressA.loaded + progressB.loaded,
         total: none
       });
-      //tslint:enable no-use-before-declare
     }
     const totalA = progressA.total.value;
     const totalB = progressB.total.value;
     const total = totalA + totalB;
     const loaded = (progressA.loaded * totalA + progressB.loaded * totalB) / (total * total);
-    //tslint:disable no-use-before-declare
     return progress({
       loaded,
       total: some(total)
     });
-    //tslint:enable no-use-before-declare
   }
   const noA = a.progress.isNone();
   const noB = b.progress.isNone();
@@ -70,7 +66,7 @@ const concatPendings = <L, A>(a: RemotePending<L, A>, b: RemotePending<L, A>): R
   if (!noA && noB) {
     return a;
   }
-  return pending; //tslint:disable-line no-use-before-declare
+  return pending;
 };
 
 export class RemoteInitial<L, A> {
@@ -129,7 +125,7 @@ export class RemoteInitial<L, A> {
    * `failure(new Error('err text')).ap(initial) will return initial.`
    */
   ap<B>(fab: RemoteData<L, Function1<A, B>>): RemoteData<L, B> {
-    return initial; //tslint:disable-line no-use-before-declare
+    return initial;
   }
 
   /**
@@ -146,7 +142,7 @@ export class RemoteInitial<L, A> {
    * `initial.chain(x => success(x)) will return initial`
    */
   chain<B>(f: Function1<A, RemoteData<L, B>>): RemoteData<L, B> {
-    return initial; //tslint:disable-line no-use-before-declare
+    return initial;
   }
 
   /**
@@ -154,7 +150,7 @@ export class RemoteInitial<L, A> {
    * It's a bit like a `chain`, but `f` should takes `RemoteData<T>` instead of returns it, and it should return T instead of takes it.
    */
   extend<B>(f: Function1<RemoteData<L, A>, B>): RemoteData<L, B> {
-    return initial; //tslint:disable-line no-use-before-declare
+    return initial;
   }
 
   /**
@@ -225,7 +221,7 @@ export class RemoteInitial<L, A> {
    * `failure(new Error('error text')).map(x => x + 99) will return failure(new Error('error text')`
    */
   map<B>(f: Function1<A, B>): RemoteData<L, B> {
-    return initial; //tslint:disable-line no-use-before-declare
+    return initial;
   }
 
   /**
@@ -240,7 +236,7 @@ export class RemoteInitial<L, A> {
    * `failure(new Error('error text')).map(x => 'new error text') will return failure(new Error('new error text'))`
    */
   mapLeft<M>(f: Function1<L, M>): RemoteData<M, A> {
-    return initial; //tslint:disable-line no-use-before-declare
+    return initial;
   }
 
   /**
@@ -433,7 +429,7 @@ export class RemoteFailure<L, A> {
   }
 
   ap<B>(fab: RemoteData<L, Function1<A, B>>): RemoteData<L, B> {
-    return fab.fold(fab, () => fab as any, () => this); //tslint:disable-line no-use-before-declare
+    return fab.fold(fab, () => fab as any, () => this);
   }
 
   chain<B>(f: Function1<A, RemoteData<L, B>>): RemoteData<L, B> {
@@ -444,12 +440,11 @@ export class RemoteFailure<L, A> {
     return this as any;
   }
 
-  fold<B>(initial: B, pending: B, failure: Function1<L, B>, success: Function1<A, B>): B {
+  fold<B>(initialOrPending: B, failure: Function1<L, B>, success: Function1<A, B>): B {
     return failure(this.error);
   }
 
   foldL<B>(
-    initial: Lazy<B>,
     pending: Function1<Option<RemoteProgress>, B>,
     failure: Function1<L, B>,
     success: Function1<A, B>
@@ -466,7 +461,7 @@ export class RemoteFailure<L, A> {
   }
 
   mapLeft<M>(f: Function1<L, M>): RemoteData<M, A> {
-    return failure(f(this.error)); //tslint:disable-line no-use-before-declare
+    return failure(f(this.error));
   }
 
   getOrElse(value: A): A {
@@ -475,10 +470,6 @@ export class RemoteFailure<L, A> {
 
   reduce<B>(f: Function2<B, A, B>, b: B): B {
     return b;
-  }
-
-  isInitial(): this is RemoteInitial<L, A> {
-    return false;
   }
 
   isPending(): this is RemotePending<L, A> {
@@ -497,11 +488,11 @@ export class RemoteFailure<L, A> {
     return none;
   }
 
-  toEither(initial: L, pending: L): Either<L, A> {
+  toEither(initialOrPending: L): Either<L, A> {
     return left(this.error);
   }
 
-  toEitherL(initial: Lazy<L>, pending: Lazy<L>): Either<L, A> {
+  toEitherL(initialOrPending: Lazy<L>): Either<L, A> {
     return left(this.error);
   }
 
@@ -526,7 +517,7 @@ export class RemoteFailure<L, A> {
   }
 
   recoverMap<B>(f: (error: L) => Option<B>, g: (value: A) => B): RemoteData<L, B> {
-    return f(this.error).fold(this as any, success); //tslint:disable-line no-use-before-declare
+    return f(this.error).fold(this as any, success);
   }
 }
 
@@ -550,7 +541,7 @@ export class RemoteSuccess<L, A> {
   }
 
   ap<B>(fab: RemoteData<L, Function1<A, B>>): RemoteData<L, B> {
-    return fab.fold(initial, fab, () => fab as any, value => this.map(value)); //tslint:disable-line no-use-before-declare
+    return fab.fold(fab, () => fab as any, value => this.map(value));
   }
 
   chain<B>(f: Function1<A, RemoteData<L, B>>): RemoteData<L, B> {
@@ -558,15 +549,14 @@ export class RemoteSuccess<L, A> {
   }
 
   extend<B>(f: Function1<RemoteData<L, A>, B>): RemoteData<L, B> {
-    return of(f(this)); //tslint:disable-line no-use-before-declare
+    return of(f(this));
   }
 
-  fold<B>(initial: B, pending: B, failure: Function1<L, B>, success: Function1<A, B>): B {
+  fold<B>(initialOrPending: B, failure: Function1<L, B>, success: Function1<A, B>): B {
     return success(this.value);
   }
 
   foldL<B>(
-    initial: Lazy<B>,
     pending: Function1<Option<RemoteProgress>, B>,
     failure: Function1<L, B>,
     success: Function1<A, B>
@@ -579,7 +569,7 @@ export class RemoteSuccess<L, A> {
   }
 
   map<B>(f: Function1<A, B>): RemoteData<L, B> {
-    return of(f(this.value)); //tslint:disable-line no-use-before-declare
+    return of(f(this.value));
   }
 
   mapLeft<M>(f: Function1<L, M>): RemoteData<M, A> {
@@ -592,10 +582,6 @@ export class RemoteSuccess<L, A> {
 
   reduce<B>(f: Function2<B, A, B>, b: B): B {
     return f(b, this.value);
-  }
-
-  isInitial(): this is RemoteInitial<L, A> {
-    return false;
   }
 
   isPending(): this is RemotePending<L, A> {
@@ -668,7 +654,6 @@ export class RemotePending<L, A> {
 
   ap<B>(fab: RemoteData<L, Function1<A, B>>): RemoteData<L, B> {
     return fab.fold(
-      initial, //tslint:disable-line no-use-before-declare
       fab.isPending() ? (concatPendings(this, fab as any) as any) : this,
       () => this,
       () => this
@@ -676,24 +661,23 @@ export class RemotePending<L, A> {
   }
 
   chain<B>(f: Function1<A, RemoteData<L, B>>): RemoteData<L, B> {
-    return pending; //tslint:disable-line no-use-before-declare
-  }
-
-  extend<B>(f: Function1<RemoteData<L, A>, B>): RemoteData<L, B> {
-    return pending; //tslint:disable-line no-use-before-declare
-  }
-
-  fold<B>(initial: B, pending: B, failure: Function1<L, B>, success: Function1<A, B>): B {
     return pending;
   }
 
+  extend<B>(f: Function1<RemoteData<L, A>, B>): RemoteData<L, B> {
+    return pending;
+  }
+
+  fold<B>(initialOrPending: B, failure: Function1<L, B>, success: Function1<A, B>): B {
+    return initialOrPending;
+  }
+
   foldL<B>(
-    initial: Lazy<B>,
-    pending: Function1<Option<RemoteProgress>, B>,
+    initialOrPending: Function1<Option<RemoteProgress>, B>,
     failure: Function1<L, B>,
     success: Function1<A, B>
   ): B {
-    return pending(this.progress);
+    return initialOrPending(this.progress);
   }
 
   getOrElseL(f: Lazy<A>): A {
@@ -705,7 +689,7 @@ export class RemotePending<L, A> {
   }
 
   mapLeft<M>(f: Function1<L, M>): RemoteData<M, A> {
-    return pending; //tslint:disable-line no-use-before-declare
+    return pending;
   }
 
   getOrElse(value: A): A {
@@ -714,10 +698,6 @@ export class RemotePending<L, A> {
 
   reduce<B>(f: Function2<B, A, B>, b: B): B {
     return b;
-  }
-
-  isInitial(): this is RemoteInitial<L, A> {
-    return false;
   }
 
   isPending(): this is RemotePending<L, A> {
@@ -736,12 +716,12 @@ export class RemotePending<L, A> {
     return none;
   }
 
-  toEither(initial: L, pending: L): Either<L, A> {
-    return left(pending);
+  toEither(initialOrPending: L): Either<L, A> {
+    return left(initialOrPending);
   }
 
-  toEitherL(initial: Lazy<L>, pending: Lazy<L>): Either<L, A> {
-    return left(pending());
+  toEitherL(initialOrPending: Lazy<L>): Either<L, A> {
+    return left(initialOrPending());
   }
 
   toNullable(): A | null {
