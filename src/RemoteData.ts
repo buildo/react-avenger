@@ -81,6 +81,11 @@ export class RemoteInitial<L, A> {
   readonly '_A': A;
   // prettier-ignore
   readonly '_L': L;
+  /**
+   * we put a progress equal to none in order to treat `RemoteInitial` as a
+   * `RemotePending` with no progress
+   */
+  readonly progress: Option<RemoteProgress> = none;
 
   /**
    * `alt` short for alternative, takes another `RemoteData`.
@@ -158,21 +163,20 @@ export class RemoteInitial<L, A> {
    *
    * For example:
    *
-   * `const foldInitial = 'it's initial'
-   * `const foldPending = 'it's pending'
+   * `const foldInitialOrPending = 'it's pending or initial'
    * `const foldFailure = (err) => 'it's failure'
    * `const foldSuccess = (data) => data + 1'
    *
-   * `initial.fold(foldInitial, foldPending, foldFailure, foldSuccess) will return 'it's initial'`
+   * `initial.fold(foldInitialOrPending, foldFailure, foldSuccess) will return 'it's initial'`
    *
-   * `pending.fold(foldInitial, foldPending, foldFailure, foldSuccess) will return 'it's pending'`
+   * `pending.fold(foldInitialOrPending, foldFailure, foldSuccess) will return 'it's pending'`
    *
-   * `failure(new Error('error text')).fold(foldInitial, foldPending, foldFailure, foldSuccess) will return 'it's failure'`
+   * `failure(new Error('error text')).fold(foldInitialOrPending, foldFailure, foldSuccess) will return 'it's failure'`
    *
-   * `success(21).fold(foldInitial, foldPending, foldFailure, foldSuccess) will return 22`
+   * `success(21).fold(foldInitialOrPending, foldFailure, foldSuccess) will return 22`
    */
-  fold<B>(initial: B, pending: B, failure: Function1<L, B>, success: Function1<A, B>): B {
-    return initial;
+  fold<B>(initialOrpending: B, failure: Function1<L, B>, success: Function1<A, B>): B {
+    return initialOrpending;
   }
 
   /**
@@ -180,18 +184,16 @@ export class RemoteInitial<L, A> {
    *
    * For example:
    *
-   * `const foldInitial = () => 'it's initial'
-   * `const foldPending = () => 'it's pending'
+   * `const foldInitialOrPending = () => 'it's pending or initial'
    *
    * rest of example is similar to `fold`
    */
   foldL<B>(
-    initial: Lazy<B>,
-    pending: Function1<Option<RemoteProgress>, B>,
+    initialOrpending: Function1<Option<RemoteProgress>, B>,
     failure: Function1<L, B>,
     success: Function1<A, B>
   ): B {
-    return initial();
+    return initialOrpending(none);
   }
 
   /**
@@ -264,19 +266,11 @@ export class RemoteInitial<L, A> {
   }
 
   /**
-   * Returns true only if `RemoteData` is `RemoteInitial`.
-   *
-   */
-  isInitial(): this is RemoteInitial<L, A> {
-    return true;
-  }
-
-  /**
-   * Returns true only if `RemoteData` is `RemotePending`.
+   * Returns true only if `RemoteData` is `RemotePending` or `RemoteInitial`.
    *
    */
   isPending(): this is RemotePending<L, A> {
-    return false;
+    return true;
   }
 
   /**
@@ -335,8 +329,8 @@ export class RemoteInitial<L, A> {
    *
    * `failure(new Error('error text')).toEither(iError, pError) will return right(Error('error text'))`
    */
-  toEither(initial: L, pending: L): Either<L, A> {
-    return left(initial);
+  toEither(initialOrpending: L): Either<L, A> {
+    return left(initialOrpending);
   }
 
   /**
@@ -352,8 +346,8 @@ export class RemoteInitial<L, A> {
    *
    * `pending.toEither(iError, pError) will return right(Error('Data is fetching'))`
    */
-  toEitherL(initial: Lazy<L>, pending: Lazy<L>): Either<L, A> {
-    return left(initial());
+  toEitherL(initialOrPending: Lazy<L>): Either<L, A> {
+    return left(initialOrPending());
   }
 
   /**
