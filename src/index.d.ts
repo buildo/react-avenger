@@ -11,18 +11,18 @@ type Queries = { [k: string]: QueryReturn<any, mixed> };
 
 type QueriesProps<Decl extends Queries> = FlattenObject<{ [k in keyof Decl]: Decl[k]['_A'] }>;
 
-type QueriesInnerProps<Decl extends Queries> = {
-  [k in keyof Decl]: (
-    | {
-        ready: false;
-      }
-    | {
-        ready: true;
-        value: Decl[k]['_P'];
-      }) & {
-    loading: boolean;
-  }
+type QueryInnerProp<DeclKey> = (
+  | {
+      ready: false;
+    }
+  | {
+      ready: true;
+      value: DeclKey;
+    }) & {
+  loading: boolean;
 };
+
+type QueriesInnerProps<Decl extends Queries> = { [k in keyof Decl]: QueryInnerProp<Decl[k]['_P']> };
 
 type QueriesOuterProps<InnerProps extends {}, Decl extends Queries> = ObjectOmit<
   InnerProps,

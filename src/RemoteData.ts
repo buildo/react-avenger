@@ -829,8 +829,6 @@ export const isSuccess = <L, A>(data: RemoteData<L, A>): data is RemoteSuccess<L
   data.isSuccess();
 export const isPending = <L, A>(data: RemoteData<L, A>): data is RemotePending<L, A> =>
   data.isPending();
-export const isInitial = <L, A>(data: RemoteData<L, A>): data is RemoteInitial<L, A> =>
-  data.isInitial();
 
 //Monoidal
 const unit = <L, A>(): RemoteData<L, A> => initial;
@@ -842,10 +840,9 @@ export const getSetoid = <L, A>(SL: Setoid<L>, SA: Setoid<A>): Setoid<RemoteData
   return {
     equals: (x, y) =>
       x.foldL(
-        () => y.isInitial(),
         () => y.isPending(),
-        xError => y.foldL(constFalse, constFalse, yError => SL.equals(xError, yError), constFalse),
-        ax => y.foldL(constFalse, constFalse, constFalse, ay => SA.equals(ax, ay))
+        xError => y.foldL(constFalse, yError => SL.equals(xError, yError), constFalse),
+        ax => y.foldL(constFalse, constFalse, ay => SA.equals(ax, ay))
       )
   };
 };
@@ -857,10 +854,9 @@ export const getOrd = <L, A>(OL: Ord<L>, OA: Ord<A>): Ord<RemoteData<L, A>> => {
     compare: (x, y) =>
       sign(
         x.foldL(
-          () => y.fold(0, -1, () => -1, () => -1),
-          () => y.fold(1, 0, () => -1, () => -1),
-          xError => y.fold(1, 1, yError => OL.compare(xError, yError), () => -1),
-          xValue => y.fold(1, 1, () => 1, yValue => OA.compare(xValue, yValue))
+          () => y.fold(0, () => -1, () => -1),
+          xError => y.fold(1, yError => OL.compare(xError, yError), () => -1),
+          xValue => y.fold(1, () => 1, yValue => OA.compare(xValue, yValue))
         )
       )
   };
@@ -874,11 +870,9 @@ export const getSemigroup = <L, A>(
   return {
     concat: (x, y) => {
       return x.foldL(
-        () => y.fold(y, y, () => y, () => y),
-        () => y.foldL(() => x, () => concatPendings(x as any, y as any), () => y, () => y),
-
-        xError => y.fold(x, x, yError => failure(SL.concat(xError, yError)), () => y),
-        xValue => y.fold(x, x, () => x, yValue => success(SA.concat(xValue, yValue)))
+        () => y.foldL(() => concatPendings(x as any, y as any), () => y, () => y),
+        xError => y.fold(x, yError => failure(SL.concat(xError, yError)), () => y),
+        xValue => y.fold(x, () => x, yValue => success(SA.concat(xValue, yValue)))
       );
     }
   };
@@ -913,13 +907,6 @@ export function fromPredicate<L, A>(
   whenFalse: Function1<A, L>
 ): Function1<A, RemoteData<L, A>> {
   return a => (predicate(a) ? success(a) : failure(whenFalse(a)));
-}
-
-export function fromProgressEvent<L, A>(event: ProgressEvent): RemoteData<L, A> {
-  return progress({
-    loaded: event.loaded,
-    total: event.lengthComputable ? some(event.total) : none
-  });
 }
 
 //instance

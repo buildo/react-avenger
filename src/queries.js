@@ -1,26 +1,14 @@
 import * as React from 'react';
 import { shallowEqual } from './shallowEqual';
 import { displayName as _displayName } from './displayName';
+import { mapQueriesToState } from './mapQueriesToState';
 import 'rxjs/add/operator/debounceTime';
 import { query, querySync } from 'avenger';
+import { RemoteInitial } from './RemoteData';
 const pick = require('lodash/pick');
 const debug = require('debug');
 
 const log = debug('react-avenger:queries');
-
-const mapQueriesToState = ({ data }, prevState) =>
-  Object.keys(data).reduce((ac, k) => {
-    const value =
-      data[k].data !== void 0 ? data[k].data : (prevState[k] && prevState[k].value) || void 0;
-    return {
-      ...ac,
-      [k]: {
-        ready: value !== void 0,
-        loading: data[k].loading,
-        value
-      }
-    };
-  }, {});
 
 export default function declareQueries(
   queries,
@@ -69,10 +57,7 @@ export default function declareQueries(
         const emptyData = queryNames.reduce(
           (ac, k) => ({
             ...ac,
-            [k]: {
-              loading: true,
-              ready: false
-            }
+            [k]: new RemoteInitial()
           }),
           {}
         );
@@ -80,7 +65,7 @@ export default function declareQueries(
         if (_querySync) {
           this.state = mapQueriesToState(
             querySync(queries, pick(props, Object.keys(this.QueryParamsTypes))),
-            {}
+            emptyData
           );
         } else {
           this.state = emptyData;

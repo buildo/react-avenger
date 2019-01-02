@@ -26,11 +26,8 @@ describe('declareQueries', () => {
     expect(mounted).toMatchSnapshot();
     await sleep(10);
     expect(render.mock.calls.length).toBe(2);
-    expect(render.mock.calls[0][0].foo.ready).toBe(false);
-    expect(render.mock.calls[0][0].foo.loading).toBe(true);
-    expect(render.mock.calls[0][0].foo.value).toBe(undefined);
-    expect(render.mock.calls[1][0].foo.ready).toBe(true);
-    expect(render.mock.calls[1][0].foo.loading).toBe(false);
+    expect(render.mock.calls[0][0].foo._tag).toBe('RemoteInitial');
+    expect(render.mock.calls[1][0].foo._tag).toBe('RemoteSuccess');
     expect(render.mock.calls[1][0].foo.value).toBe('foo');
   });
 
@@ -43,8 +40,6 @@ describe('declareQueries', () => {
     const mounted = mount(<WithFoo token="foo" />);
     expect(mounted).toMatchSnapshot();
     expect(render.mock.calls.length).toBe(3);
-    expect(render.mock.calls[2][0].foo.ready).toBe(true);
-    expect(render.mock.calls[2][0].foo.loading).toBe(false);
     expect(render.mock.calls[2][0].foo.value).toBe('foo');
   });
 });
