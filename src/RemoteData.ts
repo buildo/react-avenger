@@ -1,31 +1,13 @@
-import {
-  constFalse,
-  Function2,
-  Function1,
-  Lazy,
-  toString,
-  Predicate,
-  identity
-} from 'fp-ts/lib/function';
+/* all this code is liberally taken from @raveclassic great library "remote-data-ts" (https://github.com/devex-web-frontend/remote-data-ts) */
+
+import { Function2, Function1, Lazy, toString } from 'fp-ts/lib/function';
 import { Monad2 } from 'fp-ts/lib/Monad';
 import { Foldable2 } from 'fp-ts/lib/Foldable';
 import { Alt2 } from 'fp-ts/lib/Alt';
-import { Extend2 } from 'fp-ts/lib/Extend';
 import { sequence, Traversable2 } from 'fp-ts/lib/Traversable';
-import { isNone, none, Option, some } from 'fp-ts/lib/Option';
-import { Either, left, right, isLeft } from 'fp-ts/lib/Either';
-import { Setoid } from 'fp-ts/lib/Setoid';
-
 import { array } from 'fp-ts/lib/Array';
-
 import { HKT, HKT2, Type, Type2, URIS, URIS2 } from 'fp-ts/lib/HKT';
 import { Applicative } from 'fp-ts/lib/Applicative';
-import { Alternative2 } from 'fp-ts/lib/Alternative';
-import { Ord } from 'fp-ts/lib/Ord';
-import { sign } from 'fp-ts/lib/Ordering';
-import { Semigroup } from 'fp-ts/lib/Semigroup';
-import { Monoid } from 'fp-ts/lib/Monoid';
-import { Monoidal2 } from 'fp-ts/lib/Monoidal';
 
 export const URI = 'RemoteData';
 export type URI = typeof URI;
