@@ -7,7 +7,7 @@ import * as React from 'react';
 declare const foo: QueryReturn<{ token: string }, string>;
 const withFoo = declareQueries({ foo });
 
-// $ExpectError Type '"QueryReturn"' is not assignable to type '"CommandReturn"'.
+// $ExpectError Type 'QueryReturn<{ token: string; }, string>' is not assignable to type 'CommandReturn<any, any>'.
 const withFooWrong = declareCommands({ foo });
 
 // test the result type of declareQueries().Props
