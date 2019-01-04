@@ -4,7 +4,7 @@ import { displayName as _displayName } from './displayName';
 import { mapQueriesToState } from './mapQueriesToState';
 import 'rxjs/add/operator/debounceTime';
 import { query, querySync } from 'avenger';
-import { RemoteInitial } from './RemoteData';
+import { pending } from './RemoteData';
 const pick = require('lodash/pick');
 const debug = require('debug');
 
@@ -57,7 +57,7 @@ export default function declareQueries(
         const emptyData = queryNames.reduce(
           (ac, k) => ({
             ...ac,
-            [k]: new RemoteInitial()
+            [k]: pending
           }),
           {}
         );

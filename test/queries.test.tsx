@@ -26,7 +26,7 @@ describe('declareQueries', () => {
     expect(mounted).toMatchSnapshot();
     await sleep(10);
     expect(render.mock.calls.length).toBe(2);
-    expect(render.mock.calls[0][0].foo._tag).toBe('RemoteInitial');
+    expect(render.mock.calls[0][0].foo._tag).toBe('RemotePending');
     expect(render.mock.calls[1][0].foo._tag).toBe('RemoteSuccess');
     expect(render.mock.calls[1][0].foo.value).toBe('foo');
   });

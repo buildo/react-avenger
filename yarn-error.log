@@ -1,0 +1,102 @@
+Arguments: 
+  /usr/local/Cellar/node/10.8.0/bin/node /Users/federicosordillo/.yarn/bin/yarn.js
+
+PATH: 
+  /Users/federicosordillo/.yarn/bin:/Users/federicosordillo/.config/yarn/global/node_modules/.bin:/Users/federicosordillo/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/Users/federicosordillo/Library/Android/sdk/tools:/Users/federicosordillo/Library/Android/sdk/tools/bin:/Users/federicosordillo/Library/Android/sdk/platform-tools:/usr/local/opt/fzf/bin:/Users/federicosordillo/.vimpkg/bin
+
+Yarn version: 
+  1.9.2
+
+Node version: 
+  10.8.0
+
+Platform: 
+  darwin x64
+
+Trace: 
+  Error: https://registry.yarnpkg.com/rxjs: ETIMEDOUT
+      at Timeout._onTimeout (/Users/federicosordillo/.yarn/lib/cli.js:138076:19)
+      at ontimeout (timers.js:424:11)
+      at tryOnTimeout (timers.js:288:5)
+      at listOnTimeout (timers.js:251:5)
+      at Timer.processTimers (timers.js:211:10)
+
+npm manifest: 
+  {
+    "name": "react-avenger",
+    "version": "8.0.1",
+    "description": "react bindings for avenger",
+    "files": [
+      "lib"
+    ],
+    "main": "lib/index.js",
+    "typings": "lib/index.d.ts",
+    "scripts": {
+      "test": "jest",
+      "preversion": "npm run prettier-check && npm run typings-checker && npm test",
+      "prepublish": "npm run build",
+      "release-version": "smooth-release",
+      "build": "rimraf lib && tsc && cp src/index.d.ts lib",
+      "typings-checker": "typings-checker --allow-expect-error --project ./tsconfig.json $(find ./typings-checker -name \"*.ts*\")",
+      "prettier-check": "prettier --list-different \"{src,typings-checker}/{**/*,*}.{js,jsx,ts,tsx}\""
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/buildo/react-avenger.git"
+    },
+    "author": "Giovanni Gonzaga <giovanni@buildo.io>",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/buildo/react-avenger/issues"
+    },
+    "homepage": "https://github.com/buildo/react-avenger#readme",
+    "devDependencies": {
+      "@types/debug": "0.0.31",
+      "@types/enzyme": "^3.1.14",
+      "@types/jest": "^23.3.9",
+      "@types/lodash": "^4.14.119",
+      "@types/react": "^16.0.40",
+      "avenger": "^4.0.2",
+      "enzyme": "^3.3.0",
+      "enzyme-adapter-react-16": "^1.1.1",
+      "enzyme-to-json": "^3.3.1",
+      "io-ts": "^1.5.1",
+      "jest": "^23.5.0",
+      "prettier": "^1.11.1",
+      "react": "^16.2.0",
+      "react-dom": "^16.2.0",
+      "rimraf": "^2.6.2",
+      "smooth-release": "^8.0.0",
+      "ts-jest": "^23.10.4",
+      "typescript": "^3.1.6",
+      "typings-checker": "^2.0.0"
+    },
+    "peerDependencies": {
+      "avenger": "^3.0.0",
+      "react": ">=0.14.9 <15 || >=15.3.x"
+    },
+    "dependencies": {
+      "rxjs": "^5.4.2"
+    },
+    "jest": {
+      "setupTestFrameworkScriptFile": "./jestSetup.js",
+      "snapshotSerializers": [
+        "enzyme-to-json/serializer"
+      ],
+      "transform": {
+        "^.+\\.(t|j)sx?$": "ts-jest"
+      },
+      "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(js|tsx?)$",
+      "moduleFileExtensions": [
+        "ts",
+        "tsx",
+        "js"
+      ]
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

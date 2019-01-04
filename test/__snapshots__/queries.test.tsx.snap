@@ -6,16 +6,13 @@ exports[`declareQueries works 1`] = `
 >
   <mockConstructor
     foo={
-      RemoteInitial {
-        "_tag": "RemoteInitial",
-        "progress": None {
-          "_tag": "None",
-        },
+      RemotePending {
+        "_tag": "RemotePending",
       }
     }
     token="foo"
   >
-    {"token":"foo","foo":{"_tag":"RemoteInitial","progress":{"_tag":"None"}}}
+    {"token":"foo","foo":{"_tag":"RemotePending"}}
   </mockConstructor>
 </queries(mockConstructor)>
 `;
