@@ -1,4 +1,5 @@
 import { QueryReturn, Commands, FlattenObject } from 'avenger';
+import { RemoteData } from './RemoteData';
 
 export type mixed = object | number | string | boolean | symbol | null;
 
@@ -11,18 +12,9 @@ type Queries = { [k: string]: QueryReturn<any, mixed> };
 
 type QueriesProps<Decl extends Queries> = FlattenObject<{ [k in keyof Decl]: Decl[k]['_A'] }>;
 
-type QueryInnerProp<DeclKey> = (
-  | {
-      ready: false;
-    }
-  | {
-      ready: true;
-      value: DeclKey;
-    }) & {
-  loading: boolean;
+type QueriesInnerProps<Decl extends Queries> = {
+  [k in keyof Decl]: RemoteData<unknown, Decl[k]['_P']>
 };
-
-type QueriesInnerProps<Decl extends Queries> = { [k in keyof Decl]: QueryInnerProp<Decl[k]['_P']> };
 
 type QueriesOuterProps<InnerProps extends {}, Decl extends Queries> = ObjectOmit<
   InnerProps,
