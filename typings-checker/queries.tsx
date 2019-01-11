@@ -1,6 +1,7 @@
 import { declareQueries, declareCommands } from '../src';
 import { QueryReturn } from 'avenger';
 import * as React from 'react';
+import { RemoteData } from '../src/RemoteData';
 
 // case 1: a declaration containing a single query
 
@@ -12,16 +13,7 @@ const withFooWrong = declareCommands({ foo });
 
 // test the result type of declareQueries().Props
 type WithFooProps = {
-  foo: (
-    | {
-        ready: false;
-      }
-    | {
-        ready: true;
-        value: string;
-      }) & {
-    loading: boolean;
-  };
+  foo: RemoteData<unknown, string>;
 };
 declare var withFooProps: WithFooProps;
 withFooProps = withFoo.Props;
@@ -45,26 +37,8 @@ const withFooAndBar = declareQueries({ foo, bar });
 
 // test the result type of declareQueries().Props
 type WithFooAndBarProps = {
-  foo: (
-    | {
-        ready: false;
-      }
-    | {
-        ready: true;
-        value: string;
-      }) & {
-    loading: boolean;
-  };
-  bar: (
-    | {
-        ready: false;
-      }
-    | {
-        ready: true;
-        value: number;
-      }) & {
-    loading: boolean;
-  };
+  foo: RemoteData<unknown, string>;
+  bar: RemoteData<unknown, number>;
 };
 declare var withFooAndBarProps: WithFooAndBarProps;
 withFooAndBarProps = withFooAndBar.Props;
