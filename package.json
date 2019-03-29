@@ -1,6 +1,6 @@
 {
   "name": "react-avenger",
-  "version": "9.0.1-remotedata",
+  "version": "9.0.1",
   "description": "react bindings for avenger",
   "files": [
     "lib"

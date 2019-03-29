@@ -2,6 +2,20 @@
 
 
 
+## [v9.0.1](https://github.com/buildo/react-avenger/tree/v9.0.1) (2019-03-29)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v8.0.1...v9.0.1)
+
+#### New features:
+
+- Build using tsc [#77](https://github.com/buildo/react-avenger/issues/77)
+- drop eslint [#74](https://github.com/buildo/react-avenger/issues/74)
+- update dependencies [#73](https://github.com/buildo/react-avenger/issues/73)
+- cachestrategy validation is broken with new io-ts [#71](https://github.com/buildo/react-avenger/issues/71)
+
+#### Breaking:
+
+- expose query props via a RemoteData(-like?) API [#72](https://github.com/buildo/react-avenger/issues/72)
+
 ## [v8.0.1](https://github.com/buildo/react-avenger/tree/v8.0.1) (2018-11-02)
 [Full Changelog](https://github.com/buildo/react-avenger/compare/v8.0.0...v8.0.1)
 
