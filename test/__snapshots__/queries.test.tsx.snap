@@ -6,14 +6,13 @@ exports[`declareQueries works 1`] = `
 >
   <mockConstructor
     foo={
-      Object {
-        "loading": true,
-        "ready": false,
+      RemotePending {
+        "_tag": "RemotePending",
       }
     }
     token="foo"
   >
-    {"token":"foo","foo":{"loading":true,"ready":false}}
+    {"token":"foo","foo":{"_tag":"RemotePending"}}
   </mockConstructor>
 </queries(mockConstructor)>
 `;
@@ -24,15 +23,14 @@ exports[`declareQueries works with querySync 1`] = `
 >
   <mockConstructor
     foo={
-      Object {
-        "loading": false,
-        "ready": true,
+      RemoteSuccess {
+        "_tag": "RemoteSuccess",
         "value": "foo",
       }
     }
     token="foo"
   >
-    {"token":"foo","foo":{"ready":true,"loading":false,"value":"foo"}}
+    {"token":"foo","foo":{"value":"foo","_tag":"RemoteSuccess"}}
   </mockConstructor>
 </queries(mockConstructor)>
 `;

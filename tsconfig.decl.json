@@ -1,15 +1,15 @@
 {
-  "include": ["src"],
   "compilerOptions": {
     "lib": [
       "es2017"
     ],
     "outDir": "lib",
     "target": "es5",
-    "declaration": false,
-    "allowJs": true,
+    "declaration": true,
     "strict": true,
     "module": "commonjs",
-    "jsx": "react"
-  }
+    "jsx": "react",
+    "emitDeclarationOnly": true
+  },
+  "files": ["src/RemoteData.ts"]
 }
