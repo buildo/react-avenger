@@ -21,7 +21,7 @@ describe('declareQueries', () => {
   it('works', async () => {
     const { foo } = makeQueries();
     const render = jest.fn(JSON.stringify.bind(JSON));
-    const WithFoo = declareQueries({ foo })(render);
+    const WithFoo = declareQueries({ foo })(render as any);
     const mounted = mount(<WithFoo token="foo" />);
     expect(mounted).toMatchSnapshot();
     await sleep(10);
@@ -34,7 +34,7 @@ describe('declareQueries', () => {
   it('works with querySync', async () => {
     const { foo } = makeQueries();
     const render = jest.fn(JSON.stringify.bind(JSON));
-    const WithFoo = declareQueries({ foo }, { querySync: true })(render);
+    const WithFoo = declareQueries({ foo }, { querySync: true })(render as any);
     mount(<WithFoo token="foo" />);
     await sleep(10);
     const mounted = mount(<WithFoo token="foo" />);

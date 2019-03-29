@@ -9,13 +9,13 @@ describe('declareCommands', () => {
   it('works', async () => {
     const doFoo = Command({ params: { token: t.string }, run: () => Promise.resolve() });
     const render = jest.fn(JSON.stringify.bind(JSON));
-    const WithDoFoo = declareCommands({ doFoo })(render);
+    const WithDoFoo = declareCommands({ doFoo })(render as any);
     const mounted = mount(<WithDoFoo token="foo" />);
     expect(mounted).toMatchSnapshot();
   });
 
   it('runs a command forwarding all props', async () => {
-    const run = jest.fn(Promise.resolve.bind(Promise));
+    const run = jest.fn<any, any[]>(Promise.resolve.bind(Promise));
     const doFoo = Command({
       params: { token: t.string, foo: t.string },
       run
