@@ -10,6 +10,10 @@ function convertToRemoteData(
 ): RemoteData<string, any> {
   return data.fold(prevValue, v => {
     if (v.loading) {
+      if (prevValue._tag === 'RemoteSuccess') {
+        return prevValue;
+      }
+
       return new RemotePending();
     }
 
