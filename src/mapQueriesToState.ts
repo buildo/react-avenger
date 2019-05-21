@@ -1,4 +1,4 @@
-import { RemoteData, RemotePending, RemoteSuccess, RemoteFailure } from './RemoteData';
+import { RemoteData, success, failure, pending } from './RemoteData';
 import { Option, fromNullable } from 'fp-ts/lib/Option';
 import { Queries } from '.';
 
@@ -10,18 +10,16 @@ function convertToRemoteData(
 ): RemoteData<string, any> {
   return data.fold(prevValue, v => {
     if (v.loading) {
-      if (prevValue._tag === 'RemoteSuccess') {
-        return prevValue;
-      }
-
-      return new RemotePending();
+      return prevValue.foldL(
+        () => pending,
+        error => failure(error, true),
+        value => success(value, true)
+      );
+    } else if (v.error) {
+      return failure(v.error, false);
+    } else {
+      return success(v.data, false);
     }
-
-    if (v.error) {
-      return new RemoteFailure(v.error);
-    }
-
-    return new RemoteSuccess(v.data);
   });
 }
 
