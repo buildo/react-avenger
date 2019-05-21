@@ -26,7 +26,7 @@ export class RemoteFailure<L, A> {
   // prettier-ignore
   readonly '_L': L;
 
-  constructor(readonly error: L) {}
+  constructor(readonly error: L, readonly loading: boolean) {}
 
   alt(fy: RemoteData<L, A>): RemoteData<L, A> {
     return fy;
@@ -44,12 +44,16 @@ export class RemoteFailure<L, A> {
     return this as any;
   }
 
-  fold<B>(pending: B, failure: Function1<L, B>, success: Function1<A, B>): B {
-    return failure(this.error);
+  fold<B>(pending: B, failure: Function2<L, boolean, B>, success: Function2<A, boolean, B>): B {
+    return failure(this.error, this.loading);
   }
 
-  foldL<B>(pending: Lazy<B>, failure: Function1<L, B>, success: Function1<A, B>): B {
-    return failure(this.error);
+  foldL<B>(
+    pending: Lazy<B>,
+    failure: Function2<L, boolean, B>,
+    success: Function2<A, boolean, B>
+  ): B {
+    return failure(this.error, this.loading);
   }
 
   getOrElseL(f: Lazy<A>): A {
@@ -61,7 +65,7 @@ export class RemoteFailure<L, A> {
   }
 
   mapLeft<M>(f: Function1<L, M>): RemoteData<M, A> {
-    return failure(f(this.error));
+    return failure(f(this.error), this.loading);
   }
 
   getOrElse(value: A): A {
@@ -86,7 +90,7 @@ export class RemoteSuccess<L, A> {
   // prettier-ignore
   readonly '_L': L;
 
-  constructor(readonly value: A) {}
+  constructor(readonly value: A, readonly loading: boolean) {}
 
   alt(fy: RemoteData<L, A>): RemoteData<L, A> {
     return this;
@@ -104,12 +108,16 @@ export class RemoteSuccess<L, A> {
     return f(this.value);
   }
 
-  fold<B>(pending: B, failure: Function1<L, B>, success: Function1<A, B>): B {
-    return success(this.value);
+  fold<B>(pending: B, failure: Function2<L, boolean, B>, success: Function2<A, boolean, B>): B {
+    return success(this.value, this.loading);
   }
 
-  foldL<B>(pending: Lazy<B>, failure: Function1<L, B>, success: Function1<A, B>): B {
-    return success(this.value);
+  foldL<B>(
+    pending: Lazy<B>,
+    failure: Function2<L, boolean, B>,
+    success: Function2<A, boolean, B>
+  ): B {
+    return success(this.value, this.loading);
   }
 
   getOrElseL(f: Lazy<A>): A {
@@ -161,11 +169,15 @@ export class RemotePending<L, A> {
     return pending;
   }
 
-  fold<B>(pending: B, failure: Function1<L, B>, success: Function1<A, B>): B {
+  fold<B>(pending: B, failure: Function2<L, boolean, B>, success: Function2<A, boolean, B>): B {
     return pending;
   }
 
-  foldL<B>(pending: Lazy<B>, failure: Function1<L, B>, success: Function1<A, B>): B {
+  foldL<B>(
+    pending: Lazy<B>,
+    failure: Function2<L, boolean, B>,
+    success: Function2<A, boolean, B>
+  ): B {
     return pending();
   }
 
@@ -197,7 +209,7 @@ export class RemotePending<L, A> {
 export type RemoteData<L, A> = RemoteFailure<L, A> | RemoteSuccess<L, A> | RemotePending<L, A>;
 
 //Monad
-const of = <L, A>(value: A): RemoteSuccess<L, A> => new RemoteSuccess(value);
+const of = <L, A>(value: A): RemoteSuccess<L, A> => new RemoteSuccess(value, false);
 const ap = <L, A, B>(fab: RemoteData<L, Function1<A, B>>, fa: RemoteData<L, A>): RemoteData<L, B> =>
   fa.ap(fab);
 const map = <L, A, B>(fa: RemoteData<L, A>, f: Function1<A, B>): RemoteData<L, B> => fa.map(f);
@@ -229,8 +241,10 @@ function traverse<F>(
 const alt = <L, A>(fx: RemoteData<L, A>, fy: RemoteData<L, A>): RemoteData<L, A> => fx.alt(fy);
 
 //constructors
-export const failure = <L, A>(error: L): RemoteData<L, A> => new RemoteFailure(error);
-export const success: <L, A>(value: A) => RemoteData<L, A> = of;
+export const failure = <L, A>(error: L, loading: boolean): RemoteData<L, A> =>
+  new RemoteFailure(error, loading);
+export const success = <L, A>(value: A, loading: boolean): RemoteData<L, A> =>
+  new RemoteSuccess(value, loading);
 export const pending: RemoteData<never, never> = new RemotePending<never, never>();
 
 //instance

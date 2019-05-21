@@ -25,12 +25,13 @@ exports[`declareQueries works with querySync 1`] = `
     foo={
       RemoteSuccess {
         "_tag": "RemoteSuccess",
+        "loading": false,
         "value": "foo",
       }
     }
     token="foo"
   >
-    {"token":"foo","foo":{"value":"foo","_tag":"RemoteSuccess"}}
+    {"token":"foo","foo":{"value":"foo","loading":false,"_tag":"RemoteSuccess"}}
   </mockConstructor>
 </queries(mockConstructor)>
 `;
