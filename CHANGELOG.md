@@ -2,6 +2,14 @@
 
 
 
+## [v9.0.3](https://github.com/buildo/react-avenger/tree/v9.0.3) (2019-05-21)
+[Full Changelog](https://github.com/buildo/react-avenger/compare/v9.0.2...v9.0.3)
+
+#### New features:
+
+- keep track of loading state in RemoteFailure/Success cases [#83](https://github.com/buildo/react-avenger/issues/83)
+- provide WithQueries render-prop alternative [#66](https://github.com/buildo/react-avenger/issues/66)
+
 ## [v9.0.2](https://github.com/buildo/react-avenger/tree/v9.0.2) (2019-05-09)
 [Full Changelog](https://github.com/buildo/react-avenger/compare/v9.0.1...v9.0.2)
 
